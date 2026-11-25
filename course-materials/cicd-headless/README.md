@@ -5,6 +5,7 @@
 - [PR-Agent (Qodo) exercise: AI code review in your CI/CD](PR-Agent-Qodo/README.md): a hands-on exercise for the platform you use at work. Qodo's commercial product and community PR-Agent are separate; version 0.47.0 examples for GitHub Actions, GitLab CI, Bitbucket Cloud, Azure DevOps, Bitbucket Server/DC through Jenkins or Bamboo, Gitea, and a local run. Every example reads the same variables for any OpenAI-compatible model endpoint (default: OpenRouter with `gpt-6-luna`).
 - [GitHub + Azure OpenAI setup](github-actions/README.md): participant/fork instructions, configurable endpoint/deployment/model, missing-key failure, and a live-tested community workflow.
 - [Updated historical Qodo workflow](github-actions/qodo-pr-agent-review.yml): digest-pinned community runtime, automatic PR/comment handling and an explicit CLI path for manual PR-number dispatch.
+- [Azure DevOps: agents with Azure Repos and Boards](azure-devops/README.md): `az repos pr` and `az boards work-item` workflow, PAT scopes vs Entra and `System.AccessToken`, the official Azure DevOps MCP server, and [a PR review pipeline with headless Claude Code](azure-devops/azure-pipelines-agent-review.yml).
 - [Codex + Bitbucket Cloud + Jira Cloud](codex-bitbucket/README.md): three pipeline stages and a custom Python REST adapter for ticket context, schema-validated review and persistent bot comments.
 - [Complete research handbook](../Research/ai-assisted-pull-requests-course-handbook.md): cross-platform PR automation, alternative reviewers, security, compatibility and rollout.
 

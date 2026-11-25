@@ -1,0 +1,41 @@
+# Claude Artifacts: Retention, Visibility, and Ownership
+
+Checked 2026-11-24.
+
+## Short Answer
+
+- **Retention:** Active data stays indefinitely by default; deleted chats purge from backends within 30 days (up to 2 years if safety-flagged; 5 years for feedback or opted-in consumer training).
+- **Seat removal:** Removing a Team seat hides the member's chats and shared chat links ("Conversation not found") without auto-deleting data; impact on their shared/published artifacts is **not documented**.
+- **Visibility:** All artifacts (claude.ai and Claude Code) start private ("Only you"); Team/Enterprise shares stay org-only unless an Owner enables External sharing, and shared chat links are org-only.
+- **Ownership and training:** Commercial Terms (Team/Enterprise) give output ownership to the organization ("Customer") with no training by default; Consumer Terms assign rights (if any) to you, with training controlled in Privacy Settings.
+- **Course rule:** Treat claude.ai links as temporary - download artifacts and commit source files to Git before seats are removed.
+
+## 1. Retention
+
+- **Default lifespan:** Active data stays indefinitely until deleted or covered by Enterprise custom retention. Automatic expiration for published/shared artifacts is **not documented**. ([Privacy Center](https://privacy.claude.com) - "How long do you store my data?")
+- **Chat deletion:** Deleted chats disappear immediately and purge from backends within 30 days (Consumer and Commercial). Under Enterprise custom retention, artifacts expire on their own activity clock and custom retention "does not delete artifacts published with a public link." Whether manual chat deletion breaks an existing published artifact link is **not documented**. ([Help Center](https://support.claude.com) - "Configure custom data retention controls for Enterprise plans")
+- **Seat or account removal:** Removing a Team/Enterprise seat does not delete the account or data (Owners must request permanent deletion from Support in writing; re-adding the email restores data). Remaining members lose access to the user's chats, shared chat links ("Conversation not found"), and private projects; org-shared projects remain under Team. Impact on a removed member's shared/published artifacts is **not documented**. Consumer account deletion is permanent. ([Help Center](https://support.claude.com) - "What happens to a user's data when they are removed from a Team or Enterprise organization?")
+- **Custom retention and exceptions:** Custom retention (30-day minimum) is Enterprise-only, not on Team. Usage Policy safety flags stay up to 2 years (scores 7 years), feedback 5 years, and opted-in consumer training 5 years. ([Privacy Center](https://privacy.claude.com) - "How long do you store my organization's data?"; [Privacy Policy](https://www.anthropic.com/legal/privacy))
+
+## 2. Visibility and Sharing
+
+- **Private by default:** Chat artifacts, Claude Code HTML artifacts on claude.ai, and chats start private ("Only you"). ([Claude Code Docs](https://code.claude.com/docs/en/artifacts); [Help Center](https://support.claude.com) - "Share artifacts")
+- **Org-only vs. public links:** On Team/Enterprise, artifacts stay internal ("Only people invited", "Anyone at [organization]", Enterprise groups); "Anyone with the link" requires an Owner to enable External sharing (Organization settings > Artifacts). Team/Enterprise "Share chat" links are org-only; consumer public chat snapshots omit later messages, attachments, and raw MCP data. ([Help Center](https://support.claude.com) - "Share artifacts", "Share and unshare chats")
+- **Roles and comments:** Artifact roles are **Can view**, **Commenter** (comment, download files), and **Can edit**. Commenting requires signing in; anonymous link viewers cannot comment. Sign-in rules for external Claude Code artifact links are **not documented**. ([Help Center](https://support.claude.com) - "Share artifacts")
+- **Unpublishing:** Clicking Unpublish on a chat artifact revokes access, permanently deletes its personal and shared storage data, and blocks republishing (create a new artifact instead). Revoke shared chats via Share or Settings > Privacy > Shared chats > Unshare. ([Help Center](https://support.claude.com) - "Share artifacts", "Share and unshare chats")
+- **Link access and indexing:** Anyone with a public link can open it. For shared chats, Anthropic documents `noindex`, random URLs, and no public directory ([Help Center](https://support.claude.com) - "Public links for shared chats"). Search-engine `noindex` guarantees for published/shared and Claude Code artifacts are **not documented**.
+
+## 3. Ownership, Training, and Team Control
+
+- **Commercial Terms (Team, Enterprise, API):** "Customer (a) retains all rights to its Inputs, and (b) owns its Outputs... Anthropic hereby assigns to Customer its right, title and interest (if any) in and to Outputs." ([Commercial Terms](https://www.anthropic.com/legal/commercial-terms))
+- **Consumer Terms (Free, Pro, Max):** You retain Input rights; subject to the Terms and [Usage Policy](https://www.anthropic.com/legal/aup), "we assign to you all of our right, title, and interest - if any - in Outputs." ([Consumer Terms](https://www.anthropic.com/legal/consumer-terms))
+- **Model training:** Commercial Terms state "Anthropic may not train models on Customer Content from Services" by default (except opt-in programs or feedback, which Owners can disable). Consumer training depends on "Help improve our AI models" (Incognito excluded; feedback and safety-flagged chats may still be used). ([Commercial Terms](https://www.anthropic.com/legal/commercial-terms); [Privacy Center](https://privacy.claude.com) - "Is my data used for model training?")
+- **Team control:** The organization ("Customer") is data controller and owns Customer Content. Only the Primary Owner can export org data (24-hour link; excludes deleted items and Claude-created Office/PDF files; artifact source inclusion is **not documented**). Members need Owner approval ("Allow members to export their own data"). ([Help Center](https://support.claude.com))
+
+## 4. Practical Checklist
+
+- [ ] Download HTML, Markdown, and code artifacts before Team seats are removed.
+- [ ] Commit artifact source files to the course Git repo, not only claude.ai.
+- [ ] Clarify IP reuse: Team outputs legally belong to the course organization ("Customer").
+- [ ] Ask the Primary Owner to enable self-export before seat removal if transcripts are needed.
+- [ ] Exclude secrets and personal data from shared items; unpublish/unshare links after review.

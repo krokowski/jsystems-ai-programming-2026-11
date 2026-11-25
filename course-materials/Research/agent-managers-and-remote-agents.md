@@ -1,14 +1,20 @@
 # Agent managers, multiplexers and remote agents
 
-> Moved from [Course INDEX - AI in Programming](../Course%20INDEX%20-%20AI%20in%20Programming.md) on 2026-10-02 to keep the notes short. Facts verified 2026-10-01; dates and sources are on each item.
+> Moved from [Course INDEX - AI in Programming](../Course%20INDEX%20-%20AI%20in%20Programming.md) on 2026-10-02 to keep the notes short. Herdr, Kepler, Delta and Zed Agent Panel verified 2026-11-24; other items verified 2026-10-01. Dates and sources are on each item.
 
-## Agent managers / multiplexers - work with many agents at once (links verified 01.10.2026)
+## Agent managers / multiplexers - work with many agents at once (updated 24.11.2026)
 
-- **[Herdr](https://herdr.dev)** (open source, Rust, 03.2026): terminal multiplexer built for agents - "the runtime your coding agents live on"; real terminals kept open by a background server, so agent work survives closed lids and lost SSH connections
-  - Organizes work into **workspaces / tabs / panes**, recognizes coding agents running inside panes and tracks their state: **idle, working, blocked, done** (blocked = agent waits at an approval/question dialog)
-  - **Vendor-neutral**: run claude, codex, opencode, grok side by side; every agent in a normal terminal, you keep your own subscriptions and configs
-  - `herdr` CLI (JSON output) starts agents, splits panes, sends prompts (`herdr agent prompt ... --wait`), waits for state changes - scriptable, works for agents controlling agents
-  - Docs: [herdr.dev/docs](https://herdr.dev/docs) | Source: [herdrdev/herdr](https://github.com/herdrdev/herdr) (~42k stars, 10.2026) | vs tmux/Zellij/cmux/Warp: [herdr.dev/compare](https://herdr.dev/compare)
+- **[Herdr](https://herdr.dev)** (open source, Apache 2.0, Rust, 03.2026; verified 24.11.2026): persistent terminal runtime (`herdr-core` / `hc`) + native desktop app (`herdr-app`, 10.2026) + mobile app (11.2026) + TUI - "the runtime your coding agents live on"; sessions survive closed lids, app restarts/updates and lost SSH
+  - Organizes work into **spaces / tabs / panes**, recognizes coding agents and tracks state (**idle, working, blocked / needs you, done**) via screen detection and open **OSC 7501** protocol
+  - **Vendor-neutral**: run claude, codex, opencode, grok, cursor side by side in real terminals with your own subscriptions and configs; `herdr` / `hc` CLI scripts panes, prompts (`--wait`) and agents controlling agents
+  - **Desktop app** (macOS Apple Silicon, Linux x64/ARM64, Windows x64; GPUI + Ghostty): drag/swap panes, Ctrl/Cmd-click peek, `herdr-app shot`, and plain-text UI/layout modding via `~/.config/herdr-app/` + `AGENTS.md`
+  - **Mobile app** ([herdr.dev/mobile](https://herdr.dev/mobile), iOS/iPadOS & Android, 11.2026): connects directly over SSH (or Tailscale SSH, no cloud relay/account) to `herdr-core` (not legacy TUI); unified Inbox, touch terminals, dictation and photo upload
+  - Docs: [herdr.dev/docs](https://herdr.dev/docs) | Blog: [herdr.dev/blog](https://herdr.dev/blog) | Repos: [herdrdev/herdr](https://github.com/herdrdev/herdr) (v0.9.5, ~52.6k stars, 24.11.2026), [herdr-app](https://github.com/herdrdev/herdr-app) (~3.4k stars), [herdr-core](https://github.com/herdrdev/herdr-core) (~0.9k stars) | vs tmux/Zellij/cmux/Warp: [herdr.dev/compare](https://herdr.dev/compare)
+- **[GitKraken Kepler](https://www.gitkraken.com/kepler)** (public preview since 06.2026, v0.19.0 11.2026; verified 24.11.2026): standalone "Agentic Development Environment" for macOS/Windows/Linux; agent-agnostic (Claude Code, Codex, Copilot, Cursor, OpenCode, Grok Build, custom)
+  - Groups multi-repo work into **Tasks** with auto-created isolated **Git worktrees** (`.worktreeinclude` + Repo Commands), live Agent Graph, inline approvals, diffs/PRs, SSH/WSL and workspace import (Conductor/Orca/Herdr/Vibe Kanban); free preview with GitKraken account (browser/mobile Remote Access needs paid plan). Docs: [help.gitkraken.com/kepler](https://help.gitkraken.com/kepler)
+- **[Delta](https://delta.dev/)** by Zed Industries (private beta 08.2026, public beta 09.2026; verified 24.11.2026): standalone multiplayer agent environment (macOS/Linux/Windows + Web/Wasm) built to replace PRs; **DeltaDB** ties every edit between commits to the shared chat thread
+  - Native Claude Code via ACP + `delta-claude` plugin, BYO API keys, hosted models and Cloud Runners (Codex/other CLI plugins on [roadmap](https://delta.dev/roadmap)); shared Zed billing: Personal $0 (BYOK/external agents), Pro $10/mo, Business $30/seat/mo. Posts: [Introducing Delta](https://zed.dev/blog/introducing-delta), [public beta](https://zed.dev/blog/delta-public-beta), [Zed pricing](https://zed.dev/pricing)
+  - **Zed IDE built-in**: Zed's [Agent Panel](https://zed.dev/docs/ai/agent-panel) + Threads Sidebar also run parallel agents in isolated Git worktrees, including [External Agents](https://zed.dev/docs/ai/external-agents) (Claude Code, Codex, OpenCode, Copilot, Cursor, Gemini CLI) via the open ACP Registry (verified 24.11.2026)
 - **[Beads](https://github.com/gastownhall/beads)** - "memory upgrade for your coding agent": git-backed distributed graph issue tracker (powered by Dolt), shared structured memory so agents survive context loss between sessions. By Steve Yegge; [announcement](https://steve-yegge.medium.com/introducing-beads-a-coding-agent-memory-system-637d7d92514a) (10.2025), [HN 11.2025](https://news.ycombinator.com/item?id=46075616). `github.com/steveyegge/beads` redirects here
 - **[Paseo](https://paseo.sh)** - open-source orchestrator: local daemon manages agents, clients on desktop, mobile (iOS/Android), web and CLI; Claude Code, Codex, Copilot, OpenCode, Gemini, Cursor CLI and 25+ more via ACP. Source: [getpaseo/paseo](https://github.com/getpaseo/paseo)
 - **[Orca](https://www.onorca.dev)** - open-source (MIT) desktop app "Agent Development Environment" by Stably AI: any coding agent with your own subscription, each in its own worktree, one dashboard; macOS/Windows/Linux + mobile companion. Source: [stablyai/orca](https://github.com/stablyai/orca) (~83k stars, 10.2026)
@@ -19,15 +25,15 @@
 
 ## Herdr vs Codex App - two ways to run many agents
 
-- **Herdr = vendor-neutral runtime you control**: claude/codex/opencode/grok side by side in one window, each in a plain terminal with your subscriptions, keys and configs; orchestrate via CLI or let one agent drive others (verified 01.10.2026)
+- **Herdr = vendor-neutral runtime you control**: claude/codex/opencode/grok side by side in desktop app, TUI or mobile, each in a plain terminal with your subscriptions, keys and configs; orchestrate via CLI or let one agent drive others (verified 24.11.2026)
 - **Codex App = single-vendor desktop app**: OpenAI models only; tasks, cloud containers, GitHub integration and worktrees packaged for you, zero setup
-- **Where agents run**: Herdr keeps agents on YOUR machines (laptop, desktop, VPS, saved SSH boxes) and the persistent server survives disconnects; Codex App pushes work to OpenAI's cloud (local worktree tasks supported too)
-- **Trade-off**: Herdr costs nothing extra and works with every CLI agent, but you own the machines, updates and safety; Codex App is zero-ops and mobile-friendly, but locks the workflow to the OpenAI ecosystem
+- **Where agents run**: Herdr keeps agents on YOUR machines (laptop, desktop, VPS, saved SSH boxes) and the persistent `herdr-core` server survives disconnects; Codex App pushes work to OpenAI's cloud (local worktree tasks supported too)
+- **Trade-off**: Herdr costs nothing extra, now has desktop + mobile apps and works with every CLI agent, but you own the machines, updates and safety; Codex App is zero-ops with hosted cloud containers, but locks the workflow to the OpenAI ecosystem (verified 24.11.2026)
 - They combine well: watch Codex CLI in a Herdr pane next to Claude Code, while Codex App handles cloud tasks
 
 ## Remote agents - delegate over SSH and cloud
 
-- **Herdr remote machines**: saved SSH machines show up as workspaces; `herdr --machine <label> agent list / prompt ...` runs and steers agents on other computers without opening the TUI (both machines need an API-compatible Herdr server). The persistent server keeps agents alive after you close the laptop (verified 01.10.2026)
+- **Herdr remote machines & mobile**: saved SSH machines show up as workspaces; `herdr --machine <label> agent list / prompt ...` runs and steers agents without opening the UI, and the iOS/Android app connects straight to `herdr-core` over SSH or Tailscale SSH (verified 24.11.2026)
 - **Codex App cloud tasks**: work runs in OpenAI cloud containers with GitHub integration, hand off from desktop or phone: [Codex Cloud docs](https://developers.openai.com/codex/cloud), [Codex Mobile](https://chatgpt.com/codex/mobile/)
 - **Codex CLI headless**: `codex exec` for non-interactive runs in scripts and CI: [Non-interactive mode](https://developers.openai.com/codex/noninteractive)
 - NEW: **`codex agents`** dashboard + **`codex queue`** (Codex CLI 0.149.0) - list running local/remote sessions and append follow-up messages by session name or ID; official docs page not yet published (checked 01.10.2026), community guides: [aq.dev](https://aq.dev/guides/codex-background-agents-and-the-agents-dashboard), [proflead.dev](https://proflead.dev/posts/openai-codex-agents-dashboard-codex-queue)
