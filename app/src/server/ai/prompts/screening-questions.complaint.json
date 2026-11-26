@@ -1,0 +1,59 @@
+{
+  "version": "2026-11-26.1",
+  "questions": {
+    "photo_usable": {
+      "type": "noul",
+      "instructions": "The photo is sharp and lit well enough, and shows the product fully enough, to judge its condition."
+    },
+    "category_match": {
+      "type": "noul",
+      "instructions": "The product in the photo is {category}."
+    },
+    "damage_visible": {
+      "type": "noul",
+      "instructions": "Physical damage is visible (crack, dent, broken part, burn, swelling)."
+    },
+    "damage_type": {
+      "type": "choice",
+      "instructions": "Main visible damage.",
+      "criteria": {
+        "screen_crack": "Cracked screen or display glass.",
+        "housing_crack_or_dent": "Crack or dent in the housing or body.",
+        "scratches": "Scratches or scuffs.",
+        "liquid_marks": "Marks of liquid exposure.",
+        "burn_or_melt": "Burn or melted parts.",
+        "battery_swelling": "Swollen battery.",
+        "broken_part": "A broken or missing part (hinge, port, button).",
+        "none_visible": "No damage visible.",
+        "other": "Other damage."
+      }
+    },
+    "damage_cause": {
+      "type": "choice",
+      "instructions": "Most likely cause of the visible state.",
+      "criteria": {
+        "manufacturing_defect": "Manufacturing defect.",
+        "mechanical_impact": "Mechanical impact (drop, blow, pressure).",
+        "liquid": "Liquid exposure.",
+        "normal_wear": "Normal wear.",
+        "no_visible_damage": "No visible damage.",
+        "undetermined": "Cannot be determined from the photo."
+      }
+    },
+    "description_consistent": {
+      "type": "noul",
+      "instructions": "The photo is consistent with the customer's description of the problem."
+    },
+    "condition": {
+      "type": "score",
+      "instructions": "Overall condition of the product.",
+      "criteria": [
+        "new / sealed",
+        "like new",
+        "light wear",
+        "heavy wear",
+        "damaged"
+      ]
+    }
+  }
+}
