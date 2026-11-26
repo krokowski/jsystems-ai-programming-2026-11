@@ -33,7 +33,8 @@ export default defineConfig({
   webServer: {
     command: `pnpm build && pnpm start --port ${PORT}`,
     url: `http://localhost:${PORT}`,
-    reuseExistingServer: false,
+    // E2E_REUSE=1: run against a server started separately (its stdout is the TR3 stage-log evidence).
+    reuseExistingServer: process.env.E2E_REUSE === "1",
     timeout: 300_000,
     stdout: "pipe",
     stderr: "pipe",
