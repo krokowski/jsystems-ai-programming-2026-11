@@ -84,15 +84,19 @@ Use **the Playwright CLI** to drive the real running app like a human tester:
 Verify only the scope relevant to your change. If the change affects runtime behavior, confirm the app starts correctly.
 
 **Test Strategy:**
-| Type | Mocks | Who |
+| Type | Mocks | Typical owner |
 |---|---|---|
-| Unit | All deps | be/fe-dev |
-| Integration | Only external LLM API | be-dev |
-| E2E | NOTHING (real stack) | qa-engineer |
+| Unit | All deps | backend or frontend worker |
+| Integration | Only external LLM API | backend worker |
+| E2E | NOTHING (real stack) | coordinator or QA run |
+
+The owners are responsibilities, not predefined agent roles. Assign them to ad hoc agents through task briefs (see Sub-agents).
 
 **Verification:** For runtime changes, start the real application and finish with Manual QA. Record compilation/build, test execution and startup as separate checks, including discovery counts and skips. A successful build or E2E run alone does not establish that the app works. Documentation-only changes use diff, link and consistency checks and do not require application startup. Fix errors and warnings introduced by the change; report pre-existing failures without hiding them.
 
-**Env Vars:** See `.env.example` (OPENROUTER_API_KEY required)
+**Env Vars:** See `.env.example`. `OPENROUTER_API_KEY` and `LLM_MODEL` are required; optional variables are listed in the application's ADR. The running application reads the env file named in its ADR (for the Next.js app in `app/`, `app/.env.local`), not the repository-root `.env`.
+
+**Test photos:** `assets/example-images/` holds real device photos for upload tests, E2E and manual QA. Follow the rules in its `README.md`.
 
 ### Sub-agents
 - Prefer ad hoc subagents for one-off work. Reuse a named role only after checking its model and permissions; add a short custom definition (for example under `.claude/agents/` for Claude Code or `.codex/agents/` for Codex) only for a recurring need. The starting repository has no active custom roles.

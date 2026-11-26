@@ -132,7 +132,7 @@ Customers who want to return or complain about an electronics product currently 
 - **AC-19** Every justification cites at least one rule identifier from the applied policy (for example "R1.1" or "C3.1").
 - **AC-20** A Return case with a purchase date more than 14 days before the submission date receives Reject citing R1.
 - **AC-21** A Complaint case with a purchase date more than 24 months before the submission date receives Reject citing C1.
-- **AC-22** When the image analysis reports an unusable photo or a product that does not match the declared category, the decision is Manual review, never Approve or Reject.
+- **AC-22** When the image analysis reports an unusable photo or a product that does not match the declared category, the decision is Manual review, never Approve or Reject. **Exception:** when AC-20 or AC-21 applies (the purchase date is outside the return window or complaint period), Reject takes precedence, because the period rule does not depend on the photo.
 - **AC-23** The processing screen shows the current step ("Analizuję zdjęcie", "Przygotowuję decyzję") until the first agent message is ready.
 
 ### Chat
@@ -300,7 +300,7 @@ Help a customer understand whether their return or complaint is likely to be acc
 ### Not allowed
 - Making the decision final or binding, promising a refund amount, a replacement model or a repair date.
 - Inventing rules, deadlines, exceptions or compensation not present in the policy.
-- Approving or rejecting when the photo is unusable or does not match the declared product (must use Manual review).
+- Approving or rejecting when the photo is unusable or does not match the declared product (must use Manual review). The only exception is a Reject for a purchase date outside the return window or complaint period (AC-22).
 - Changing the decision only because the customer insists, without new facts.
 - Asking for personal data (name, address, phone, e-mail, payment or card details, passwords).
 - Giving legal advice or interpreting consumer law beyond the policy text.
