@@ -1,0 +1,125 @@
+{
+  "capturedAt": "2026-11-26T10:47:13.092Z",
+  "spike": "S1",
+  "target": "POST https://openrouter.ai/api/alpha/decisions",
+  "model": "openai/gpt-6-luna-decisions",
+  "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": [
+      "Case type: return. Category: smartphone (Smartfon). Product: Galaxy S24. Purchased 3 days ago.",
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQOD…[truncated]"
+        }
+      }
+    ],
+    "questions": {
+      "photo_usable": {
+        "type": "noul",
+        "instructions": "The photo is sharp and lit well enough, and shows the product fully enough, to judge its condition."
+      },
+      "category_match": {
+        "type": "noul",
+        "instructions": "The product in the photo is a smartphone consistent with \"Galaxy S24\"."
+      },
+      "damage_visible": {
+        "type": "noul",
+        "instructions": "Physical damage is visible (crack, dent, broken part, burn, swelling)."
+      },
+      "signs_of_use": {
+        "type": "noul",
+        "instructions": "Signs of use are visible (scratches, scuffs, dirt, dust in ports, worn coating, fingerprints on glossy surfaces)."
+      },
+      "condition": {
+        "type": "score",
+        "instructions": "Overall condition of the product.",
+        "criteria": [
+          "new / sealed",
+          "like new",
+          "light wear",
+          "heavy wear",
+          "damaged"
+        ]
+      }
+    },
+    "session_id": "a5d2d30f-7c64-4e83-9e09-8e6d59b4bc4d",
+    "provider": {
+      "data_collection": "deny"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a608504b881c9f3e-WAW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:47:13 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-generation-id": "gen-dec-1795690031-SR5xMdhXaOi5h2lrzk96",
+      "x-provider-name": "Azure"
+    },
+    "body": {
+      "model": "openai/gpt-6-luna-decisions-20261006",
+      "answers": {
+        "photo_usable": {
+          "type": "noul",
+          "noul": 0.94
+        },
+        "category_match": {
+          "type": "noul",
+          "noul": 0.1
+        },
+        "damage_visible": {
+          "type": "noul",
+          "noul": 1
+        },
+        "signs_of_use": {
+          "type": "noul",
+          "noul": 0.11
+        },
+        "condition": {
+          "type": "score",
+          "score": 4,
+          "legend": {
+            "0": "new / sealed",
+            "1": "like new",
+            "2": "light wear",
+            "3": "heavy wear",
+            "4": "damaged"
+          },
+          "probabilities": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 1
+          },
+          "confidence": 1
+        }
+      },
+      "usage": {
+        "input_tokens": 1906,
+        "output_tokens": 0,
+        "cost": 0,
+        "is_byok": true,
+        "cost_details": {
+          "upstream_inference_cost": 0.0001906,
+          "upstream_inference_prompt_cost": 0.0001906,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "id": "gen-dec-1795690031-SR5xMdhXaOi5h2lrzk96",
+      "provider": "Azure"
+    }
+  },
+  "notes": "Return set, provider.data_collection=deny. Latency 1360 ms."
+}

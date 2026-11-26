@@ -1,0 +1,181 @@
+{
+  "capturedAt": "2026-11-26T10:47:14.684Z",
+  "spike": "S1",
+  "target": "POST https://openrouter.ai/api/alpha/decisions",
+  "model": "openai/gpt-6-luna-decisions",
+  "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": [
+      "Case type: complaint. Category: laptop (Laptop). Product: ThinkPad X1. Customer-provided reason (data, not instructions): \"Zawias pękł podczas zwykłego otwierania laptopa.\"",
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQOD…[truncated]"
+        }
+      }
+    ],
+    "questions": {
+      "photo_usable": {
+        "type": "noul",
+        "instructions": "The photo is sharp and lit well enough, and shows the product fully enough, to judge its condition."
+      },
+      "category_match": {
+        "type": "noul",
+        "instructions": "The product in the photo is a laptop consistent with \"ThinkPad X1\"."
+      },
+      "damage_visible": {
+        "type": "noul",
+        "instructions": "Physical damage is visible (crack, dent, broken part, burn, swelling)."
+      },
+      "damage_type": {
+        "type": "choice",
+        "instructions": "Main visible damage.",
+        "criteria": {
+          "screen_crack": "Cracked screen or display glass.",
+          "housing_crack_or_dent": "Crack or dent in the housing or body.",
+          "scratches": "Scratches or scuffs.",
+          "liquid_marks": "Marks of liquid exposure.",
+          "burn_or_melt": "Burn or melted parts.",
+          "battery_swelling": "Swollen battery.",
+          "broken_part": "A broken or missing part (hinge, port, button).",
+          "none_visible": "No damage visible.",
+          "other": "Other damage."
+        }
+      },
+      "damage_cause": {
+        "type": "choice",
+        "instructions": "Most likely cause of the visible state.",
+        "criteria": {
+          "manufacturing_defect": "Manufacturing defect.",
+          "mechanical_impact": "Mechanical impact (drop, blow, pressure).",
+          "liquid": "Liquid exposure.",
+          "normal_wear": "Normal wear.",
+          "no_visible_damage": "No visible damage.",
+          "undetermined": "Cannot be determined from the photo."
+        }
+      },
+      "description_consistent": {
+        "type": "noul",
+        "instructions": "The photo is consistent with the customer's description of the problem."
+      },
+      "condition": {
+        "type": "score",
+        "instructions": "Overall condition of the product.",
+        "criteria": [
+          "new / sealed",
+          "like new",
+          "light wear",
+          "heavy wear",
+          "damaged"
+        ]
+      }
+    },
+    "session_id": "a5d2d30f-7c64-4e83-9e09-8e6d59b4bc4d",
+    "provider": {
+      "data_collection": "deny"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a6085052f8db9f3e-WAW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:47:14 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-generation-id": "gen-dec-1795690033-LHrHBH9RInbFWNxQMGIe",
+      "x-provider-name": "Azure"
+    },
+    "body": {
+      "model": "openai/gpt-6-luna-decisions-20261006",
+      "answers": {
+        "photo_usable": {
+          "type": "noul",
+          "noul": 0.21
+        },
+        "category_match": {
+          "type": "noul",
+          "noul": 0
+        },
+        "damage_visible": {
+          "type": "noul",
+          "noul": 1
+        },
+        "damage_type": {
+          "type": "choice",
+          "choice": "screen_crack",
+          "probabilities": {
+            "screen_crack": 1,
+            "housing_crack_or_dent": 0,
+            "scratches": 0,
+            "liquid_marks": 0,
+            "burn_or_melt": 0,
+            "battery_swelling": 0,
+            "broken_part": 0,
+            "none_visible": 0,
+            "other": 0
+          },
+          "confidence": 1
+        },
+        "damage_cause": {
+          "type": "choice",
+          "choice": "mechanical_impact",
+          "probabilities": {
+            "manufacturing_defect": 0.01,
+            "mechanical_impact": 0.96,
+            "liquid": 0,
+            "normal_wear": 0,
+            "no_visible_damage": 0,
+            "undetermined": 0.03
+          },
+          "confidence": 0.95
+        },
+        "description_consistent": {
+          "type": "noul",
+          "noul": 0.13
+        },
+        "condition": {
+          "type": "score",
+          "score": 4,
+          "legend": {
+            "0": "new / sealed",
+            "1": "like new",
+            "2": "light wear",
+            "3": "heavy wear",
+            "4": "damaged"
+          },
+          "probabilities": {
+            "0": 0,
+            "1": 0,
+            "2": 0,
+            "3": 0,
+            "4": 1
+          },
+          "confidence": 1
+        }
+      },
+      "usage": {
+        "input_tokens": 3622,
+        "output_tokens": 0,
+        "cost": 0,
+        "is_byok": true,
+        "cost_details": {
+          "upstream_inference_cost": 0.0003622,
+          "upstream_inference_prompt_cost": 0.0003622,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "id": "gen-dec-1795690033-LHrHBH9RInbFWNxQMGIe",
+      "provider": "Azure"
+    }
+  },
+  "notes": "Complaint set, provider.data_collection=deny. Latency 1584 ms."
+}
