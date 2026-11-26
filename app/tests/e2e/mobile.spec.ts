@@ -13,7 +13,6 @@ test.describe("mobile 360x800 @mobile", () => {
   test.use({ viewport: { width: 360, height: 800 } });
 
   test("return flow without horizontal scroll, summary collapsed", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     skipWithoutKey(test);
     await page.goto("/");
     await expectNoHScroll(page);

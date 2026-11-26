@@ -6,7 +6,6 @@ import { fillCaseForm, PHOTOS, submitCase } from "./helpers/form";
 
 test.describe("return happy path @cross-browser", () => {
   test("return gets a decision and answers a follow-up", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     skipWithoutKey(test);
     const purchaseDate = daysAgo(3);
     await page.goto("/");
@@ -25,7 +24,10 @@ test.describe("return happy path @cross-browser", () => {
     const first = await waitForFirstMessage(page);
     await expect(first).toContainText(DECISION_LABELS);
     await expect(first).toContainText(/R\d\.\d/);
-    await expect(page.getByText("Smartfon").first()).toBeVisible();
+    // On narrow viewports the summary is collapsed behind a toggle (ui-contract).
+    const summaryToggle = page.getByRole("button", { name: "Pokaż szczegóły zgłoszenia" });
+    if (await summaryToggle.isVisible()) await summaryToggle.click();
+    await expect(page.getByText("Smartfon").locator("visible=true").first()).toBeVisible();
 
     const replies = page.getByLabel("Odpowiedź asystenta");
     const before = await replies.count();

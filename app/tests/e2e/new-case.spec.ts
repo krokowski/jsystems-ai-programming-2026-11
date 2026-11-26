@@ -21,7 +21,6 @@ async function reachChat(page: import("@playwright/test").Page): Promise<void> {
 
 test.describe("new case and reload", () => {
   test("new case dialog cancels and confirms", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     skipWithoutKey(test);
     await reachChat(page);
     await page.getByRole("button", { name: "Nowe zgłoszenie" }).click();
@@ -37,7 +36,6 @@ test.describe("new case and reload", () => {
   });
 
   test("reload on chat returns to an empty form (AC-32)", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     skipWithoutKey(test);
     await reachChat(page);
     await page.reload();

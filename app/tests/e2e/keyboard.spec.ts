@@ -4,7 +4,6 @@ import { PHOTOS } from "./helpers/form";
 
 test.describe("keyboard-only form", () => {
   test("every control is reachable and submit gets focus", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     await page.goto("/");
     const kb = page.keyboard;
 
@@ -42,6 +41,8 @@ test.describe("keyboard-only form", () => {
     await page.locator(`[data-iso="${iso}"]`).focus();
     await kb.press("Enter");
     await expect(date).toContainText(/\d{2}\.\d{2}\.\d{4}/);
+    // Choosing a day closes the popover (ui-contract); wait for it to be gone.
+    await expect(page.locator(`[data-iso="${iso}"]`)).toBeHidden();
 
     // Reason.
     await kb.press("Tab");

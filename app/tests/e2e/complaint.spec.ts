@@ -6,7 +6,6 @@ import { fillCaseForm, PHOTOS, submitCase } from "./helpers/form";
 
 test.describe("complaint", () => {
   test("complaint with a mislabeled image file gets a decision", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     skipWithoutKey(test);
     await page.goto("/");
     await fillCaseForm(page, {

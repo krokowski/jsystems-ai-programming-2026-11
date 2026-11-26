@@ -6,7 +6,6 @@ import { fillCaseForm, PHOTOS, submitCase } from "./helpers/form";
 
 test.describe("deterministic date rejects", () => {
   test("return older than 14 days is rejected (R1.1)", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     skipWithoutKey(test);
     await page.goto("/");
     await fillCaseForm(page, {
@@ -23,7 +22,6 @@ test.describe("deterministic date rejects", () => {
   });
 
   test("complaint older than 24 months is rejected (C1.1)", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     skipWithoutKey(test);
     await page.goto("/");
     await fillCaseForm(page, {

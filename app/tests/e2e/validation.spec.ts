@@ -4,7 +4,6 @@ import { submitCase } from "./helpers/form";
 
 test.describe("form validation (no AI)", () => {
   test("empty submit shows errors, focuses first radio, sends nothing", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     const posts: string[] = [];
     page.on("request", (r) => {
       if (r.method() === "POST" && r.url().includes("/api/cases")) posts.push(r.url());
@@ -21,7 +20,6 @@ test.describe("form validation (no AI)", () => {
   });
 
   test("non-image file is rejected", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     await page.goto("/");
     await page.getByLabel("Zdjęcie produktu").setInputFiles("tests/fixtures/files/not-an-image.txt");
     await expect(page.getByText("Dozwolone formaty: JPEG, PNG, WebP")).toBeVisible();
@@ -29,7 +27,6 @@ test.describe("form validation (no AI)", () => {
   });
 
   test("text content with .jpg name is rejected by content check", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     await page.goto("/");
     await page.getByLabel("Zdjęcie produktu").setInputFiles("tests/fixtures/files/text-named.jpg");
     await expect(page.getByText("Dozwolone formaty: JPEG, PNG, WebP")).toBeVisible();
@@ -37,7 +34,6 @@ test.describe("form validation (no AI)", () => {
   });
 
   test("future days are disabled in the calendar", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     await page.goto("/");
     await page.getByRole("button", { name: /Data zakupu/ }).click();
     const tomorrow = daysAhead(1);
@@ -50,7 +46,6 @@ test.describe("form validation (no AI)", () => {
   });
 
   test("no case request is produced by invalid input", async ({ page }) => {
-    test.fixme(true, "pending T54: UI not implemented");
     const posts: string[] = [];
     page.on("request", (r) => {
       if (r.method() === "POST" && r.url().includes("/api/cases")) posts.push(r.url());
