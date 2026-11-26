@@ -9,8 +9,12 @@ build/
 !.env.example
 secrets
 .DS_Store
-# Project skills in .agents/skills/ and skills-lock.json are committed: skills built
-# in class must reach the repository. .claude/skills/ holds the CLI's links to them.
+# Installed skills are not committed: skills-lock.json (committed) is the source of
+# truth for which external skills are used and at which commit. Skills authored in
+# this repository stay tracked via explicit "!" exceptions below.
+# .claude/skills/ holds the CLI's links to .agents/skills/.
+.agents/skills/*
+!.agents/skills/verified-research/
 .claude/skills/
 __pycache__/
 *.pyc
