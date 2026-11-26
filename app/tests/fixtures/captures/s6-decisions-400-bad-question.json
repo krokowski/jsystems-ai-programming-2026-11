@@ -1,0 +1,43 @@
+{
+  "capturedAt": "2026-11-26T10:47:35.309Z",
+  "spike": "S6",
+  "target": "POST https://openrouter.ai/api/alpha/decisions",
+  "model": "openai/gpt-6-luna-decisions",
+  "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "hello",
+    "questions": {
+      "x": {
+        "type": "score",
+        "instructions": "Rate.",
+        "criteria": []
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a60850dd8c6e0230-WAW",
+      "connection": "keep-alive",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:47:35 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-openrouter-error-origin": "client"
+    },
+    "body": {
+      "error": {
+        "message": "[\n  {\n    \"origin\": \"array\",\n    \"code\": \"too_small\",\n    \"minimum\": 1,\n    \"inclusive\": true,\n    \"path\": [\n      \"questions\",\n      \"x\",\n      \"criteria\"\n    ],\n    \"message\": \"Too small: expected array to have >=1 items\"\n  }\n]",
+        "code": 400
+      },
+      "user_id": "REDACTED"
+    }
+  },
+  "notes": "Invalid question spec (score with empty criteria). Latency 24 ms."
+}

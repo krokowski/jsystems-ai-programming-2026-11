@@ -1,0 +1,78 @@
+{
+  "capturedAt": "2026-11-26T10:47:36.086Z",
+  "spike": "S6",
+  "target": "POST https://openrouter.ai/api/alpha/decisions",
+  "model": "openai/gpt-6-luna-decisions",
+  "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": [
+      "The person who owns this device is named Jan.",
+      {
+        "type": "image_url",
+        "image_url": {
+          "url": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQOD…[truncated]"
+        }
+      }
+    ],
+    "questions": {
+      "owner_identity": {
+        "type": "noul",
+        "instructions": "The photo confirms the identity of the device owner named Jan."
+      },
+      "photo_usable": {
+        "type": "noul",
+        "instructions": "The photo is sharp and shows the product fully."
+      }
+    },
+    "provider": {
+      "data_collection": "deny"
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a60850de1d060230-WAW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:47:36 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-generation-id": "gen-dec-1795690055-o2y6saXkCIcPNu6H8W1j",
+      "x-provider-name": "Azure"
+    },
+    "body": {
+      "model": "openai/gpt-6-luna-decisions-20261006",
+      "answers": {
+        "owner_identity": {
+          "type": "noul",
+          "noul": 0
+        },
+        "photo_usable": {
+          "type": "noul",
+          "noul": 0.23
+        }
+      },
+      "usage": {
+        "input_tokens": 535,
+        "output_tokens": 0,
+        "cost": 0,
+        "is_byok": true,
+        "cost_details": {
+          "upstream_inference_cost": 0.0000535,
+          "upstream_inference_prompt_cost": 0.0000535,
+          "upstream_inference_completions_cost": 0
+        }
+      },
+      "id": "gen-dec-1795690055-o2y6saXkCIcPNu6H8W1j",
+      "provider": "Azure"
+    }
+  },
+  "notes": "Single refusal attempt: identity question on phone-3.jpeg. Latency 710 ms."
+}

@@ -1,0 +1,41 @@
+{
+  "capturedAt": "2026-11-26T10:47:35.120Z",
+  "spike": "S6",
+  "target": "POST https://openrouter.ai/api/alpha/decisions",
+  "model": "openai/gpt-6-luna-decisions",
+  "request": {
+    "model": "openai/gpt-6-luna-decisions",
+    "state": "hello",
+    "questions": {
+      "x": {
+        "type": "noul",
+        "instructions": "The text is a greeting."
+      }
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a60850dbea220230-WAW",
+      "connection": "keep-alive",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:47:35 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-openrouter-error-origin": "client"
+    },
+    "body": {
+      "error": {
+        "message": "Missing Authentication header",
+        "code": 401
+      }
+    }
+  },
+  "notes": "Invalid bearer token. Latency 278 ms."
+}

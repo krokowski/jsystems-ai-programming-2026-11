@@ -1,0 +1,42 @@
+{
+  "capturedAt": "2026-11-26T10:47:35.278Z",
+  "spike": "S6",
+  "target": "POST https://openrouter.ai/api/alpha/decisions",
+  "model": "openai/does-not-exist-decisions",
+  "request": {
+    "model": "openai/does-not-exist-decisions",
+    "state": "hello",
+    "questions": {
+      "x": {
+        "type": "noul",
+        "instructions": "The text is a greeting."
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a60850dd5e35c704-WAW",
+      "connection": "keep-alive",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:47:35 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-generation-id": "gen-dec-1795690055-yPFDKLL0L8NiPJ7ddgp4",
+      "x-openrouter-error-origin": "client"
+    },
+    "body": {
+      "error": {
+        "message": "Model openai/does-not-exist-decisions does not exist",
+        "code": 400
+      }
+    }
+  },
+  "notes": "Unknown model id. Latency 30 ms."
+}
