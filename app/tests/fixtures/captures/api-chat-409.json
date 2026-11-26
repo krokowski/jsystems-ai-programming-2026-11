@@ -1,0 +1,40 @@
+{
+  "capturedAt": "2026-11-26T11:34:46.340Z",
+  "target": "POST http://localhost:3010/api/cases/<caseId>/chat",
+  "request": {
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "message": {
+        "id": "msg-faa509b0-5ee0-4a2b-826d-0e756b33e9c5",
+        "role": "user",
+        "parts": [
+          {
+            "type": "text",
+            "text": "A jaki jest okres zwrotu?"
+          }
+        ]
+      },
+      "trigger": "submit-message"
+    }
+  },
+  "response": {
+    "status": 409,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "error": {
+        "code": "CASE_STATE",
+        "message": "Poczekaj na zakończenie poprzedniej odpowiedzi."
+      }
+    }
+  },
+  "notes": "Second chat request (id differs) sent right after the first one's response headers arrived (request A status 200) while A was still streaming."
+}

@@ -1,0 +1,25 @@
+{
+  "capturedAt": "2026-11-26T11:36:04.613Z",
+  "target": "POST http://localhost:3010/api/cases/<caseId>/analysis",
+  "request": {
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "status": "analyzed",
+      "findingsSource": "llm",
+      "photoUsable": true
+    }
+  },
+  "notes": "Return, phone-2.jpeg, server started with ANALYSIS_ESCALATION=always (escalated path)."
+}

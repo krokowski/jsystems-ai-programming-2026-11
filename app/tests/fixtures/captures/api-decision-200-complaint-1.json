@@ -1,0 +1,67 @@
+{
+  "capturedAt": "2026-11-26T11:35:03.768Z",
+  "target": "POST http://localhost:3010/api/cases/<caseId>/decision",
+  "request": {
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "status": "decided",
+      "decision": "manual_review",
+      "decisionLabel": "Do weryfikacji przez pracownika",
+      "citedRules": [
+        "C1.1",
+        "C4.3"
+      ],
+      "firstMessage": {
+        "id": "f920ec10-248c-4329-9daa-e38d8d6d8255",
+        "role": "assistant",
+        "metadata": {
+          "decision": "manual_review",
+          "origin": "initial",
+          "citedRules": [
+            "C1.1",
+            "C4.3"
+          ]
+        },
+        "parts": [
+          {
+            "type": "text",
+            "text": "Dziękujemy za zgłoszenie dotyczące pękniętego zawiasu w Twoim laptopie."
+          },
+          {
+            "type": "data-decision",
+            "data": {
+              "decision": "manual_review",
+              "label": "Do weryfikacji przez pracownika",
+              "origin": "initial"
+            }
+          },
+          {
+            "type": "text",
+            "text": "### Uzasadnienie\n\nZgłoszenie mieści się w 24-miesięcznym okresie składania reklamacji (C1.1). Na zdjęciu widoczne jest uszkodzenie ekranu, a nie zgłaszane uszkodzenie zawiasu, dlatego opis i zdjęcie są niespójne i wymagają oceny pracownika (C4.3).\n\nZastosowane zasady: C1.1, C4.3"
+          },
+          {
+            "type": "text",
+            "text": "### Następne kroki\n\n1. Pracownik serwisu oceni zgłoszenie.\n2. Możesz dopisać na czacie, kiedy i w jaki sposób pojawił się problem z zawiasem."
+          },
+          {
+            "type": "text",
+            "text": "_To jest wstępna decyzja. Ostateczna decyzja zostanie podjęta po oględzinach produktu przez nasz serwis._"
+          }
+        ]
+      }
+    }
+  },
+  "notes": "Complaint case attempt 1, decision step."
+}

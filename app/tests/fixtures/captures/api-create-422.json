@@ -1,0 +1,45 @@
+{
+  "capturedAt": "2026-11-26T11:34:21.233Z",
+  "target": "POST http://localhost:3010/api/cases",
+  "request": {
+    "headers": {
+      "content-type": "multipart/form-data; boundary=<generated>"
+    },
+    "body": {
+      "multipartFields": {
+        "category": "smartphone",
+        "productName": "a",
+        "purchaseDate": "2026-11-27",
+        "photo": {
+          "fileName": "not-an-image.txt",
+          "size": 44,
+          "contentType": "text/plain"
+        }
+      }
+    }
+  },
+  "response": {
+    "status": 422,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "error": {
+        "code": "VALIDATION_FAILED",
+        "message": "Popraw zaznaczone pola formularza.",
+        "fields": {
+          "caseType": "Wybierz rodzaj zgłoszenia.",
+          "productName": "Nazwa produktu musi mieć od 2 do 100 znaków.",
+          "purchaseDate": "Data zakupu nie może być z przyszłości",
+          "photo": "Dozwolone formaty: JPEG, PNG, WebP"
+        }
+      }
+    }
+  },
+  "notes": "Several invalid fields at once: no caseType, productName 'a', purchaseDate tomorrow, photo is a text file."
+}

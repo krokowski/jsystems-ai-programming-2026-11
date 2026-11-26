@@ -1,0 +1,69 @@
+{
+  "capturedAt": "2026-11-26T11:34:45.238Z",
+  "target": "POST http://localhost:3010/api/cases/<caseId>/decision",
+  "request": {
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "status": "decided",
+      "decision": "reject",
+      "decisionLabel": "Odrzucono",
+      "citedRules": [
+        "R1.1",
+        "R1.2",
+        "R6.2"
+      ],
+      "firstMessage": {
+        "id": "6b062481-00ee-46c5-91e4-52b5299b783b",
+        "role": "assistant",
+        "metadata": {
+          "decision": "reject",
+          "origin": "initial",
+          "citedRules": [
+            "R1.1",
+            "R1.2",
+            "R6.2"
+          ]
+        },
+        "parts": [
+          {
+            "type": "text",
+            "text": "Cześć, sprawdziłem Twoje zgłoszenie dotyczące zwrotu."
+          },
+          {
+            "type": "data-decision",
+            "data": {
+              "decision": "reject",
+              "label": "Odrzucono",
+              "origin": "initial"
+            }
+          },
+          {
+            "type": "text",
+            "text": "### Uzasadnienie\n\nZgodnie z zasadą zwrotu bez podania przyczyny produkt można zwrócić w ciągu 14 dni od zakupu (R1.1). Termin zwrotu upłynął 10 listopada 2026 r., dlatego zwrot nie może zostać przyjęty w ramach tej zasady. Jeśli uważasz, że produkt jest wadliwy, możesz złożyć reklamację (R1.2, R6.2).\n\nZastosowane zasady: R1.1, R1.2, R6.2"
+          },
+          {
+            "type": "text",
+            "text": "### Następne kroki\n\n1. Zachowaj produkt.\n2. Jeśli uważasz, że produkt jest wadliwy, możesz złożyć reklamację."
+          },
+          {
+            "type": "text",
+            "text": "_To jest wstępna decyzja. Ostateczna decyzja zostanie podjęta po oględzinach produktu przez nasz serwis._"
+          }
+        ]
+      }
+    }
+  },
+  "notes": "Return purchased today-30, forced reject by the date rule."
+}

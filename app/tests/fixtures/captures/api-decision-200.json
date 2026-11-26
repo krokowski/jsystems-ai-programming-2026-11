@@ -1,0 +1,67 @@
+{
+  "capturedAt": "2026-11-26T11:34:34.394Z",
+  "target": "POST http://localhost:3010/api/cases/<caseId>/decision",
+  "request": {
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "status": "decided",
+      "decision": "manual_review",
+      "decisionLabel": "Do weryfikacji przez pracownika",
+      "citedRules": [
+        "R4.3",
+        "R1.1"
+      ],
+      "firstMessage": {
+        "id": "e7a8418a-a611-47df-aa79-c94022845e90",
+        "role": "assistant",
+        "metadata": {
+          "decision": "manual_review",
+          "origin": "initial",
+          "citedRules": [
+            "R4.3",
+            "R1.1"
+          ]
+        },
+        "parts": [
+          {
+            "type": "text",
+            "text": "Dziękujemy za zgłoszenie zwrotu smartfona."
+          },
+          {
+            "type": "data-decision",
+            "data": {
+              "decision": "manual_review",
+              "label": "Do weryfikacji przez pracownika",
+              "origin": "initial"
+            }
+          },
+          {
+            "type": "text",
+            "text": "### Uzasadnienie\n\nZgłoszenie mieści się w 14-dniowym okresie zwrotu (R1.1). Zdjęcie nie potwierdza jednak, że przedstawia zadeklarowany Galaxy S24 — widoczny interfejs wskazuje na inny produkt, dlatego nie można na jego podstawie ocenić stanu zwracanego urządzenia (R4.3). Sprawa wymaga weryfikacji przez pracownika serwisu.\n\nZastosowane zasady: R4.3, R1.1"
+          },
+          {
+            "type": "text",
+            "text": "### Następne kroki\n\n1. Pracownik serwisu oceni zgłoszenie.\n2. Możesz dodać w czacie szczegóły, na przykład wyjaśnić, co przedstawia zdjęcie lub czego na nim nie widać."
+          },
+          {
+            "type": "text",
+            "text": "_To jest wstępna decyzja. Ostateczna decyzja zostanie podjęta po oględzinach produktu przez nasz serwis._"
+          }
+        ]
+      }
+    }
+  },
+  "notes": "Case 1 after analysis; model decision."
+}
