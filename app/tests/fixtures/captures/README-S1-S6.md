@@ -22,3 +22,17 @@ Cost: `usage.cost` is 0 for all calls (BYOK); upstream cost in `usage.cost_detai
 - 5xx, 429 (and `Retry-After`), timeouts, mid-stream error events (SSE `error` chunk, finish_reason `error`), 402 insufficient credits.
 - `type: "refusal"` answer: one provocation attempt returned a normal answer; the refusal shape is only known from the docs: `{ "type": "refusal" }`.
 - Decisions "no providers available" for `data_collection: deny`: did not occur, so not captured.
+
+## Jev 1.14 captures (ADR-005 A23, 2026-11-26)
+| File | Request | Result |
+|---|---|---|
+| `s1-jev-return.json` | Decisions, `typesafe/jev-1.14`, return set, phone-1.jpg 1568 px, deny | 200, see above |
+| `s1-jev-complaint.json` | Decisions, `typesafe/jev-1.14`, complaint set, laptop-1.png 1568 px, deny | 200, see above |
+Not captured for Jev: refusal answer, 4xx/5xx, a photo below 256 px (documented to fail; the stage escalates to vision).
+
+## Chat follow-up captures (T35)
+
+| File | Request | Result |
+|---|---|---|
+| `s5-chat-followup-refused.json` | second step after the S5 (b) tool call, tool result `{accepted:false}` | 200, raw SSE, text answer |
+| `s5-chat-followup-accepted.json` | second step with the tool call decision `approve` and tool result `{accepted:true}` | 200, raw SSE, text answer |

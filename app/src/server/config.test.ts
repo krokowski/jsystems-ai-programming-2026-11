@@ -48,7 +48,7 @@ describe("parseConfig: defaults", () => {
     expect(config.openRouterApiKey).toBe(SECRET);
     expect(config.llmModel).toBe("x/llm-model");
     expect(config.visionModel).toBe("x/llm-model");
-    expect(config.decisionsModel).toBe("openai/gpt-6-luna-decisions");
+    expect(config.decisionsModel).toBe("typesafe/jev-1.14");
     expect(config.screeningConfidenceThreshold).toBe(0.8);
     expect(config.analysisEscalation).toBe("auto");
     expect(config.caseTtlMinutes).toBe(120);

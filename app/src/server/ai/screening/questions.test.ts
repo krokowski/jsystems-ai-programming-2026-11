@@ -10,10 +10,10 @@ import { buildScreeningQuestions, buildStateText } from "./questions";
 import { requiredScreeningKeys } from "./escalation";
 import { loadCapture } from "../../../../tests/support/replay-fetch";
 
-// Source captures: s1-return-deny.json / s1-complaint-deny.json (request.questions as sent in S1).
+// Source captures: s1-jev-return.json / s1-jev-complaint.json (request.questions as sent by scripts/spikes/s1-jev.ts, A23).
 const questionsOnly = z.looseObject({ questions: z.record(z.string(), z.unknown()) });
-const returnRequest = questionsOnly.parse(loadCapture("s1-return-deny.json").request);
-const complaintRequest = questionsOnly.parse(loadCapture("s1-complaint-deny.json").request);
+const returnRequest = questionsOnly.parse(loadCapture("s1-jev-return.json").request);
+const complaintRequest = questionsOnly.parse(loadCapture("s1-jev-complaint.json").request);
 
 const returnForm: CaseForm = {
   caseType: "return",
@@ -39,16 +39,13 @@ describe("buildScreeningQuestions", () => {
     }
   });
 
-  it("keeps every captured question text except category_match (S1 combined question confused the model)", () => {
+  it("produces exactly the question texts that were sent in the Jev captures", () => {
     for (const [caseType, captured] of [
       ["return", returnRequest.questions],
       ["complaint", complaintRequest.questions],
     ] as const) {
-      const { questions } = buildScreeningQuestions(caseType, "smartphone");
-      for (const [key, value] of Object.entries(captured)) {
-        if (key === "category_match") continue;
-        expect(questions[key]).toEqual(value);
-      }
+      const { questions } = buildScreeningQuestions(caseType, caseType === "return" ? "smartphone" : "laptop");
+      expect(questions).toEqual(captured);
     }
   });
 

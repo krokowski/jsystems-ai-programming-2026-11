@@ -4,7 +4,7 @@ import { fileTypeFromBuffer } from "file-type";
 import sharp from "sharp";
 
 export const MAX_PHOTO_BYTES = 10_485_760;
-export const AI_IMAGE_MAX_SIDE = 1600;
+export const AI_IMAGE_MAX_SIDE = 1568;
 export const THUMB_MAX_SIDE = 320;
 const MAX_INPUT_PIXELS = 40_000_000;
 
@@ -59,8 +59,9 @@ export async function processPhoto(bytes: Uint8Array): Promise<ProcessedImage> {
       .jpeg({ quality: 80 })
       .toBuffer({ resolveWithObject: true });
 
-    const thumb = await source
-      .clone()
+    // The thumbnail is made from the already reduced AI image, so the full-size
+    // original is decoded only once (TAC-06 latency).
+    const thumb = await sharp(ai.data)
       .resize({
         width: THUMB_MAX_SIDE,
         height: THUMB_MAX_SIDE,

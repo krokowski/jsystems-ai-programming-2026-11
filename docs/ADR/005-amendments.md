@@ -10,7 +10,7 @@
 
 On 2026-11-26 a consistency review compared the PRD, the ADR set, `AGENTS.md` and the implementation plan. It found contradictions and gaps that would leave an implementing agent unsure what to do.
 
-This ADR records each resolution as an amendment (A1–A21). A22 was added after spike S1 (gate G2). The amended ADRs are not rewritten, so the original decisions stay traceable. Each amended ADR has a header note pointing here.
+This ADR records each resolution as an amendment (A1–A21). A22 was added after spike S1 (gate G2); A23 records the switch of the screening model to Jev 1.14. The amended ADRs are not rewritten, so the original decisions stay traceable. Each amended ADR has a header note pointing here.
 
 Rule for agents: **when an ADR-000 – ADR-004 statement conflicts with an amendment below, follow the amendment.**
 
@@ -225,6 +225,17 @@ Rule for agents: **when an ADR-000 – ADR-004 statement conflicts with an amend
 - The stored `ScreeningArea.confidence` holds the derived value for `noul` areas, so the stage log stays comparable across types.
 - Cost accounting: when `usage.cost` is 0 because the key is BYOK, the stage log records `usage.cost_details.upstream_inference_cost` instead.
 - Decided by the product owner on 2026-11-26 (gate G2).
+
+### A23. Screening model: Jev 1.14 instead of Luna Decisions
+**Amends:** ADR-000 §3 (technology stack), §7 (`DECISIONS_MODEL` default), §8.3; ADR-002 §3.2; ADR-003 §3.2 step 6; A22.
+**Context:** on 2026-11-26 the product owner asked to replace `openai/gpt-6-luna-decisions` with `typesafe/jev-1.14` (https://openrouter.ai/typesafe/jev-1.14). Jev is served by the same Decisions API (`POST /api/alpha/decisions`, typed `noul`/`choice`/`score` answers with calibrated probabilities), so `ScreeningPort` and the escalation design stay.
+**Decision:**
+- `DECISIONS_MODEL` defaults to `typesafe/jev-1.14`. The adapter, question sets and escalation policy are unchanged in shape.
+- Jev accepts only PNG/JPEG data URLs with each side between 256 and 1568 px. The AI image is therefore resized so its longer side is at most **1568 px** (was 1600 px), for every model. Photos whose shorter side falls below 256 px make the screening call fail; the stage then escalates to the vision model (ADR-002 §3.3), which is the designed fallback.
+- The Jev capture (`s1-jev-findings.md`) shows `noul` answers **without** `confidence`, as with Luna, so the A22 rule `max(p, 1 − p)` applies. The adapter would use an API `confidence` if one appeared.
+- Jev returns fractional `score` values (e.g. 3.95); the adapter rounds them to the nearest bucket index.
+- The Luna captures (`s1-*`) stay as history; the screening tests replay new Jev captures (`s1-jev-*`).
+- Decided by the product owner on 2026-11-26.
 
 ---
 

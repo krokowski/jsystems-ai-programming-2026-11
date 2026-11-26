@@ -42,7 +42,7 @@ function thumbnailBytes(dataUrl: string): Buffer {
 describe("processPhoto limits", () => {
   it("exposes the limits from the spec", () => {
     expect(MAX_PHOTO_BYTES).toBe(10_485_760);
-    expect(AI_IMAGE_MAX_SIDE).toBe(1600);
+    expect(AI_IMAGE_MAX_SIDE).toBe(1568);
   });
 
   it("rejects a file one byte above 10 MB with FILE_TOO_LARGE", async () => {
@@ -67,16 +67,16 @@ describe("processPhoto format detection", () => {
 });
 
 describe("processPhoto on real photos", () => {
-  it("accepts laptop-1.png (JPEG bytes with a .png name), resizes to longer side 1600 and strips metadata", async () => {
+  it("accepts laptop-1.png (JPEG bytes with a .png name), resizes to longer side 1568 and strips metadata", async () => {
     const result = await processPhoto(sample("laptop-1.png"));
 
     expect(result.originalMime).toBe("image/jpeg");
     expect(result.originalBytes).toBe(sample("laptop-1.png").byteLength);
-    expect(result.width).toBeLessThanOrEqual(1600);
-    expect(result.height).toBeLessThanOrEqual(1600);
-    expect(Math.max(result.width, result.height)).toBe(1600);
+    expect(result.width).toBeLessThanOrEqual(1568);
+    expect(result.height).toBeLessThanOrEqual(1568);
+    expect(Math.max(result.width, result.height)).toBe(1568);
     // Source is portrait (3024x3135): height is the longer side.
-    expect(result.height).toBe(1600);
+    expect(result.height).toBe(1568);
 
     const meta = await sharp(result.jpeg).metadata();
     expect(meta.format).toBe("jpeg");

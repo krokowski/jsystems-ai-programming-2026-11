@@ -19,7 +19,7 @@ export interface AppConfig {
 
 export class ConfigError extends Error {}
 
-const DEFAULT_DECISIONS_MODEL = "openai/gpt-6-luna-decisions";
+const DEFAULT_DECISIONS_MODEL = "typesafe/jev-1.14";
 const DEFAULT_THRESHOLD = 0.8;
 const DEFAULT_POLICY_DIR = "../docs/policies";
 const DEFAULT_CASE_TTL_MINUTES = 120;

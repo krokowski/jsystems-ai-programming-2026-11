@@ -1,5 +1,8 @@
 import "server-only";
 
+// Adapter for the OpenRouter Decisions API. It serves any Decisions-API model; the default is
+// Jev 1.14 (`typesafe/jev-1.14`, ADR-005 A23). The file and export names stay from the Luna era.
+
 import { z } from "zod";
 
 import type { ScreeningArea, ScreeningResult } from "@/lib/schemas/domain";
@@ -14,10 +17,17 @@ import { buildScreeningQuestions, buildStateText, type ScreeningQuestion } from 
 const DECISIONS_URL = "https://openrouter.ai/api/alpha/decisions";
 
 // Field names fixed by spike S1 (tests/fixtures/captures/s1-findings.md).
-const noulAnswer = z.object({ type: z.literal("noul"), noul: z.number().min(0).max(1) });
+// A23: Jev (like Luna) returns no `confidence` on `noul` answers in the real captures
+// (s1-jev-findings.md), though the docs show one; use it when it is a number, else the A22 fallback.
+const noulAnswer = z.object({
+  type: z.literal("noul"),
+  noul: z.number().min(0).max(1),
+  confidence: z.number().min(0).max(1).nullish(),
+});
+// A23: Jev returns a fractional expected bucket (3.95); it is rounded to the bucket index below.
 const scoreAnswer = z.object({
   type: z.literal("score"),
-  score: z.number().int().min(0),
+  score: z.number().min(0),
   confidence: z.number().min(0).max(1),
   probabilities: z.record(z.string(), z.number()),
 });
@@ -63,7 +73,7 @@ function mapArea(key: string, question: ScreeningQuestion, raw: unknown, thresho
     const parsed = noulAnswer.safeParse(raw);
     if (!parsed.success) return refusedArea(key, question);
     const p = parsed.data.noul;
-    const confidence = round6(Math.max(p, 1 - p)); // ADR-005 A22
+    const confidence = parsed.data.confidence ?? round6(Math.max(p, 1 - p)); // ADR-005 A22/A23
     return {
       key,
       type: "noul",
@@ -76,11 +86,13 @@ function mapArea(key: string, question: ScreeningQuestion, raw: unknown, thresho
   }
   if (question.type === "score") {
     const parsed = scoreAnswer.safeParse(raw);
-    if (!parsed.success || parsed.data.score >= question.criteria.length) return refusedArea(key, question);
+    if (!parsed.success) return refusedArea(key, question);
+    const bucket = Math.round(parsed.data.score);
+    if (bucket >= question.criteria.length) return refusedArea(key, question);
     return {
       key,
       type: "score",
-      value: parsed.data.score,
+      value: bucket,
       probabilities: parsed.data.probabilities,
       confidence: parsed.data.confidence,
       certain: parsed.data.confidence >= threshold,
@@ -163,6 +175,7 @@ export function createLunaDecisionsScreening(deps: LunaDecisionsDeps): Screening
           ],
           questions,
           session_id: input.caseId,
+          // A23: data_collection=deny is routable for Jev (provider TypeSafe), see s1-jev-findings.md.
           provider: { data_collection: "deny" },
         }),
         signal,

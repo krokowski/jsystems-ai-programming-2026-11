@@ -19,9 +19,12 @@ import {
 import { createLunaDecisionsScreening } from "./luna-decisions";
 import { requiredScreeningKeys } from "./escalation";
 
-// Source captures: s1-return-deny.json, s1-complaint-deny.json (200), s6-decisions-401.json (401).
-const returnCapture = loadCapture("s1-return-deny.json");
-const complaintCapture = loadCapture("s1-complaint-deny.json");
+// Source captures (A23, Jev): s1-jev-return.json, s1-jev-complaint.json (200).
+// Old Luna capture s1-return-deny.json is kept only for the A22 fallback test (noul without confidence).
+// Errors: s6-decisions-401.json (401), s6-decisions-400-unknown-model.json (400).
+const returnCapture = loadCapture("s1-jev-return.json");
+const complaintCapture = loadCapture("s1-jev-complaint.json");
+const lunaReturnCapture = loadCapture("s1-return-deny.json");
 const unauthorized = loadCapture("s6-decisions-401.json");
 const unknownModel = loadCapture("s6-decisions-400-unknown-model.json");
 
@@ -78,32 +81,45 @@ function area(result: { areas: ScreeningArea[] }, key: string): ScreeningArea {
 
 afterEach(() => vi.restoreAllMocks());
 
-describe("return capture (s1-return-deny.json)", () => {
-  it("maps noul/score answers per ADR-005 A22 and stays schema-valid", async () => {
+describe("return capture (s1-jev-return.json)", () => {
+  it("maps noul/score answers (A22 fallback: Jev noul carries no confidence) and stays schema-valid", async () => {
     const replay = replayFetch([{ capture: returnCapture }]);
     const result = await screening(replay).screen({ caseId: CASE_ID, caseType: "return", form: returnForm, jpeg });
 
     expect(screeningResultSchema.safeParse(result).success).toBe(true);
     expect(result.error).toBeNull();
-    expect(result.model).toBe("openai/gpt-6-luna-decisions-20261006");
+    expect(result.model).toBe("typesafe/jev-1.14-20261014");
     expect(result.promptVersion).toBe("2026-11-26.1");
     expect(result.areas.map((a) => a.key)).toEqual([...requiredScreeningKeys("return")]);
 
     expect(area(result, "photo_usable")).toMatchObject({
-      type: "noul", value: true, confidence: 0.94, certain: true, refused: false,
+      type: "noul", value: true, confidence: 0.76, certain: false, refused: false,
     });
-    expect(area(result, "photo_usable").probabilities).toEqual({ true: 0.94, false: 0.06 });
-    expect(area(result, "category_match")).toMatchObject({ value: false, confidence: 0.9, certain: true });
-    expect(area(result, "damage_visible")).toMatchObject({ value: true, confidence: 1, certain: true });
-    expect(area(result, "signs_of_use")).toMatchObject({ value: false, confidence: 0.89, certain: true });
-    expect(area(result, "condition")).toMatchObject({ type: "score", value: 4, confidence: 1, certain: true });
-    expect(area(result, "condition").probabilities).toEqual({ "0": 0, "1": 0, "2": 0, "3": 0, "4": 1 });
+    expect(area(result, "photo_usable").probabilities).toEqual({ true: 0.76, false: 0.24 });
+    expect(area(result, "category_match")).toMatchObject({ value: true, confidence: 0.98, certain: true });
+    expect(area(result, "damage_visible")).toMatchObject({ value: true, confidence: 0.98, certain: true });
+    expect(area(result, "signs_of_use")).toMatchObject({ value: true, confidence: 0.7, certain: false });
+    // Jev returns a fractional score (3.95); the adapter rounds it to the bucket index.
+    expect(area(result, "condition")).toMatchObject({ type: "score", value: 4, confidence: 0.98, certain: true });
+    expect(area(result, "condition").probabilities).toEqual({ "0": 0, "1": 0, "2": 0, "3": 0.03, "4": 0.97 });
 
-    expect(result.allCertain).toBe(true);
-    expect(result.uncertainKeys).toEqual([]);
+    expect(result.allCertain).toBe(false);
+    expect(result.uncertainKeys).toEqual(["photo_usable", "signs_of_use"]);
     // BYOK: usage.cost is 0, the real price is cost_details.upstream_inference_cost (A22).
-    expect(result.costCredits).toBe(0.0001906);
+    expect(result.costCredits).toBe(0.000140616);
     expect(result.durationMs).toBeGreaterThanOrEqual(0);
+  });
+
+  it("Luna capture (s1-return-deny.json, history): noul without confidence still maps via the A22 fallback", async () => {
+    const replay = replayFetch([{ capture: lunaReturnCapture }]);
+    const result = await screening(replay).screen({ caseId: CASE_ID, caseType: "return", form: returnForm, jpeg });
+    expect(result.error).toBeNull();
+    expect(result.model).toBe("openai/gpt-6-luna-decisions-20261006");
+    expect(area(result, "photo_usable")).toMatchObject({ value: true, confidence: 0.94, certain: true });
+    expect(area(result, "category_match")).toMatchObject({ value: false, confidence: 0.9, certain: true });
+    expect(area(result, "condition")).toMatchObject({ value: 4, confidence: 1, certain: true });
+    expect(result.allCertain).toBe(true);
+    expect(result.costCredits).toBe(0.0001906);
   });
 
   it("sends the S1 request structure to the Decisions endpoint", async () => {
@@ -117,7 +133,7 @@ describe("return capture (s1-return-deny.json)", () => {
     const sent = requestSchema.parse(call?.body);
     const captured = requestSchema.parse(returnCapture.request);
     expect(Object.keys(sent).sort()).toEqual(Object.keys(captured).sort());
-    expect(sent.model).toBe("openai/gpt-6-luna-decisions");
+    expect(sent.model).toBe("typesafe/jev-1.14");
     expect(sent.session_id).toBe(CASE_ID);
     expect(sent.provider).toEqual({ data_collection: "deny" });
     expect(sent.state).toHaveLength(2);
@@ -125,10 +141,8 @@ describe("return capture (s1-return-deny.json)", () => {
     expect(sent.state[1].type).toBe("image_url");
     expect(sent.state[1].image_url.url).toBe(`data:image/jpeg;base64,${jpeg.toString("base64")}`);
     expect(sent.state[1].image_url.url.startsWith("data:image/jpeg;base64,")).toBe(true);
-    // Same question keys as captured; category_match intentionally reworded (S1 finding).
-    expect(Object.keys(sent.questions)).toEqual(Object.keys(captured.questions));
-    expect(sent.questions.category_match).toEqual({ type: "noul", instructions: "The product in the photo is a smartphone." });
-    expect(sent.questions.condition).toEqual(captured.questions.condition);
+    expect(sent.questions).toEqual(captured.questions);
+    expect(sent.state[0]).toBe(captured.state[0]);
   });
 
   it("uses the 'an electronic device' wording for category other", async () => {
@@ -151,28 +165,30 @@ describe("return capture (s1-return-deny.json)", () => {
     expect(lines).toHaveLength(1);
     const entry = logEntrySchema.parse(JSON.parse(lines[0] ?? "{}"));
     expect(entry).toMatchObject({
-      stage: "screening", caseId: CASE_ID, status: "ok", model: "openai/gpt-6-luna-decisions-20261006",
-      promptVersion: "2026-11-26.1", costCredits: 0.0001906,
+      stage: "screening", caseId: CASE_ID, status: "ok", model: "typesafe/jev-1.14-20261014",
+      promptVersion: "2026-11-26.1", costCredits: 0.000140616,
     });
     expect(lines[0]).not.toContain("Galaxy");
     expect(lines[0]).not.toContain("base64");
   });
 });
 
-describe("certainty threshold (derived from s1-complaint-deny.json / s1-return-deny.json)", () => {
-  it("complaint capture: photo_usable 0.21 gives confidence 0.79, below the 0.8 default", async () => {
+describe("certainty threshold (derived from s1-jev-complaint.json / s1-jev-return.json)", () => {
+  it("complaint capture: photo_usable 0.42 gives confidence 0.58, uncertain; damage_cause 0.87 is certain", async () => {
     const replay = replayFetch([{ capture: complaintCapture }]);
     const result = await screening(replay).screen({
       caseId: CASE_ID, caseType: "complaint", form: complaintForm, jpeg,
     });
     expect(result.areas.map((a) => a.key)).toEqual([...requiredScreeningKeys("complaint")]);
-    expect(area(result, "photo_usable")).toMatchObject({ value: false, confidence: 0.79, certain: false });
-    expect(area(result, "damage_type")).toMatchObject({ type: "choice", value: "screen_crack", confidence: 1, certain: true });
-    expect(area(result, "damage_type").probabilities).toMatchObject({ screen_crack: 1, scratches: 0 });
-    expect(area(result, "damage_cause")).toMatchObject({ value: "mechanical_impact", confidence: 0.95, certain: true });
+    expect(area(result, "photo_usable")).toMatchObject({ value: false, confidence: 0.58, certain: false });
+    expect(area(result, "category_match")).toMatchObject({ value: true, confidence: 0.95, certain: true });
+    expect(area(result, "damage_type")).toMatchObject({ type: "choice", value: "screen_crack", confidence: 0.98, certain: true });
+    expect(area(result, "damage_type").probabilities).toMatchObject({ screen_crack: 0.98, scratches: 0 });
+    expect(area(result, "damage_cause")).toMatchObject({ value: "mechanical_impact", confidence: 0.87, certain: true });
+    expect(area(result, "description_consistent")).toMatchObject({ value: false, confidence: 0.88, certain: true });
     expect(result.allCertain).toBe(false);
-    expect(result.uncertainKeys).toContain("photo_usable");
-    expect(result.costCredits).toBe(0.0003622);
+    expect(result.uncertainKeys).toEqual(["photo_usable"]);
+    expect(result.costCredits).toBe(0.00029085);
   });
 
   it("complaint capture request carries the reason in a customer_data block and the complaint question set", async () => {
@@ -182,29 +198,32 @@ describe("certainty threshold (derived from s1-complaint-deny.json / s1-return-d
     expect(sent.state[0]).toContain('<customer_data label="reason">');
     expect(sent.state[0]).toContain("Zawias pękł");
     const captured = questionsOnly.parse(complaintCapture.request);
-    expect(Object.keys(sent.questions)).toEqual(Object.keys(captured.questions));
-    expect(sent.questions.damage_type).toEqual(captured.questions.damage_type);
+    expect(sent.questions).toEqual(captured.questions);
   });
 
-  it("0.2 (derived from 0.21) lands exactly on the 0.80 boundary and is certain", async () => {
-    const body = derivedBody(complaintCapture, (b) => {
+  it("0.2 (derived from 0.42) lands exactly on the 0.80 boundary and is certain; 0.21 is not", async () => {
+    const at = derivedBody(complaintCapture, (b) => {
       b.answers.photo_usable = { type: "noul", noul: 0.2 };
     });
-    const replay = replayFetch([{ capture: complaintCapture, body }]);
-    const result = await screening(replay).screen({
-      caseId: CASE_ID, caseType: "complaint", form: complaintForm, jpeg,
+    const below = derivedBody(complaintCapture, (b) => {
+      b.answers.photo_usable = { type: "noul", noul: 0.21 };
     });
-    expect(area(result, "photo_usable")).toMatchObject({ value: false, confidence: 0.8, certain: true });
+    const input = { caseId: CASE_ID, caseType: "complaint", form: complaintForm, jpeg } as const;
+    const r1 = await screening(replayFetch([{ capture: complaintCapture, body: at }])).screen(input);
+    expect(area(r1, "photo_usable")).toMatchObject({ value: false, confidence: 0.8, certain: true });
+    const r2 = await screening(replayFetch([{ capture: complaintCapture, body: below }])).screen(input);
+    expect(area(r2, "photo_usable")).toMatchObject({ value: false, confidence: 0.79, certain: false });
   });
 
-  it("threshold 0.9 from config makes 0.89 (signs_of_use 0.11) uncertain while 0.94 stays certain", async () => {
-    const replay = replayFetch([{ capture: returnCapture }]);
+  it("threshold 0.9 from config makes 0.87 (damage_cause) and 0.88 (description_consistent) uncertain while 0.95 stays certain", async () => {
+    const replay = replayFetch([{ capture: complaintCapture }]);
     const result = await screening(replay, config({ SCREENING_CONFIDENCE_THRESHOLD: "0.9" })).screen({
-      caseId: CASE_ID, caseType: "return", form: returnForm, jpeg,
+      caseId: CASE_ID, caseType: "complaint", form: complaintForm, jpeg,
     });
-    expect(area(result, "photo_usable").certain).toBe(true);
-    expect(area(result, "signs_of_use")).toMatchObject({ confidence: 0.89, certain: false });
-    expect(result.uncertainKeys).toEqual(["signs_of_use"]);
+    expect(area(result, "category_match").certain).toBe(true);
+    expect(area(result, "damage_cause")).toMatchObject({ confidence: 0.87, certain: false });
+    expect(area(result, "description_consistent")).toMatchObject({ confidence: 0.88, certain: false });
+    expect(result.uncertainKeys).toEqual(["photo_usable", "damage_cause", "description_consistent"]);
     expect(result.allCertain).toBe(false);
   });
 
@@ -229,7 +248,7 @@ describe("answers that are not usable", () => {
     expect(area(result, "damage_visible")).toMatchObject({
       type: "noul", value: null, probabilities: null, confidence: null, certain: false, refused: true,
     });
-    expect(result.uncertainKeys).toEqual(["damage_visible"]);
+    expect(result.uncertainKeys).toEqual(["photo_usable", "damage_visible", "signs_of_use"]); // the other two are 0.76 / 0.7 in the Jev capture
     expect(result.allCertain).toBe(false);
     expect(result.error).toBeNull();
     expect(result.areas).toHaveLength(5);
