@@ -151,13 +151,13 @@ describe("applyForcedOutcome", () => {
       }),
     ).toEqual({
       decision: "reject",
-      citedRules: ["R1.1", "R2.1"],
+      citedRules: ["R1.1"],
       forcedBy: "date_rule",
       modelDecision: "approve",
     });
   });
 
-  it("deduplicates forced and model rules and drops unknown model rules", () => {
+  it("cites only the forced rules when the model decision contradicts the forced one", () => {
     const forced = forcedOutcome({
       caseType: "return",
       dateRule: dateRule("return", false),
@@ -167,6 +167,22 @@ describe("applyForcedOutcome", () => {
       applyForcedOutcome({
         forced,
         modelDecision: "approve",
+        citedRules: ["R4.3", "R2.1"],
+        policyRuleIds: RETURN_IDS,
+      }).citedRules,
+    ).toEqual(["R1.1"]);
+  });
+
+  it("when the model agrees with the forced decision keeps forced ids first, then valid model ids", () => {
+    const forced = forcedOutcome({
+      caseType: "return",
+      dateRule: dateRule("return", false),
+      findings: findings(),
+    });
+    expect(
+      applyForcedOutcome({
+        forced,
+        modelDecision: "reject",
         citedRules: ["R1.1", "R9.9", "R2.1"],
         policyRuleIds: RETURN_IDS,
       }).citedRules,

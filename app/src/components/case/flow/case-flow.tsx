@@ -65,13 +65,10 @@ export function CaseFlow(): React.JSX.Element {
     return () => controller.abort();
   }, [processingCaseId, processingStep, processingFailed]);
 
-  const photoUrl = state.kind === "form" ? (state.photo?.objectUrl ?? null) : state.kind === "expired" ? null : state.photo.objectUrl;
-
-  // The object URL outlives form/processing/chat/expired; it is revoked on NEW_CASE only.
+  // CaseFlow owns the URL of the photo it holds (form -> processing -> chat -> expired). The dropzone only
+  // revokes URLs it created itself, so a URL carried over by "Wróć do formularza" is revoked here as soon as
+  // a different photo is submitted, and on NEW_CASE.
   const liveUrlRef = useRef<string | null>(null);
-  useEffect(() => {
-    if (photoUrl) liveUrlRef.current = photoUrl;
-  }, [photoUrl]);
 
   const startNewCase = useCallback((): void => {
     if (liveUrlRef.current) URL.revokeObjectURL(liveUrlRef.current);
@@ -85,6 +82,9 @@ export function CaseFlow(): React.JSX.Element {
   const onExpired = useCallback((): void => dispatch({ type: "EXPIRED" }), []);
 
   async function submit(values: CaseForm, photo: PhotoDraft, draft: FormDraft): Promise<void> {
+    const held = liveUrlRef.current;
+    if (held !== null && held !== photo.objectUrl) URL.revokeObjectURL(held);
+    liveUrlRef.current = photo.objectUrl;
     dispatch({ type: "SUBMIT_STARTED", draft, photo });
     const result = await createCase(buildCaseFormData(values, photo.file), pl.form.errors.photoTooLarge);
     if (result.kind === "created") {

@@ -69,7 +69,8 @@ export function validateCitedRules(
 
 /**
  * Combines the model decision with a forced outcome. The forced decision and rules win;
- * the model's rules are kept only when they are known policy IDs, and duplicates are removed.
+ * the model's rules are kept only when they are known policy IDs and the model agrees with the forced
+ * decision (a contradicting model cites only the forced rules); duplicates are removed.
  */
 export function applyForcedOutcome(input: {
   forced: ForcedOutcome | null;
@@ -79,7 +80,9 @@ export function applyForcedOutcome(input: {
 }): AppliedDecision {
   const { forced, modelDecision, citedRules, policyRuleIds } = input;
   const validModelRules = citedRules.filter((rule) => policyRuleIds.has(rule));
-  const merged = [...(forced?.ruleIds ?? []), ...validModelRules];
+  // A model that contradicts the forced decision must not cite rules that argue for its own outcome.
+  const contradicts = forced !== null && forced.decision !== modelDecision;
+  const merged = contradicts ? [...forced.ruleIds] : [...(forced?.ruleIds ?? []), ...validModelRules];
   return {
     decision: forced?.decision ?? modelDecision,
     citedRules: [...new Set(merged)],

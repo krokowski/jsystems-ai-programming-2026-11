@@ -30,10 +30,10 @@ function parseRequest(body: unknown): { message: AppUIMessage; text: string } {
   const { message } = parsed.data;
   const text = message.parts.map((part) => part.text).join("");
   const trimmed = text.trim();
-  if (trimmed.length === 0 || trimmed.length > MAX_MESSAGE_LENGTH) throw invalidMessage();
+  if (trimmed.length === 0 || text.length > MAX_MESSAGE_LENGTH) throw invalidMessage();
   return {
-    message: { id: message.id, role: "user", parts: [{ type: "text", text }], metadata: {} },
-    text,
+    message: { id: message.id, role: "user", parts: [{ type: "text", text: trimmed }], metadata: {} },
+    text: trimmed,
   };
 }
 
@@ -83,16 +83,25 @@ export async function chatCase(caseId: string, body: unknown, deps: ChatCaseDeps
     repo.update(caseId, (c) => ({ ...patch(c), chatBusy: false, chatBusySince: null }));
   };
 
+  // An accepted update stays pending until the turn finishes: it is stored together with the assistant
+  // message that explains it (AC-30), and dropped when the turn fails or is aborted.
+  let pendingDecision: ChatUpdateRecord | null = null;
+
   try {
     return streamChat(
       {
         registry: deps.registry ?? getModelRegistry(),
         now: deps.now,
         onDecision: (record: ChatUpdateRecord): void => {
-          repo.update(caseId, (c) => ({ ...c, decision: record, decisionHistory: [...c.decisionHistory, record] }));
+          pendingDecision = record;
         },
         onFinish: (assistant: AppUIMessage): void => {
-          release((c) => ({ ...c, messages: [...c.messages, assistant] }));
+          const record = pendingDecision;
+          release((c) => ({
+            ...c,
+            messages: [...c.messages, assistant],
+            ...(record === null ? {} : { decision: record, decisionHistory: [...c.decisionHistory, record] }),
+          }));
         },
         onError: (): void => {
           release();

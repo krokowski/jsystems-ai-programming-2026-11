@@ -65,7 +65,7 @@ export function renderPrompt(name: PromptName, vars: Readonly<Record<string, str
 }
 
 export function customerDataBlock(label: string, text: string): string {
-  const safe = text.replaceAll("</customer_data", "&lt;/customer_data");
+  const safe = text.replace(/<(\s*\/\s*customer_data)/gi, "&lt;$1");
   const safeLabel = label.replace(/[^\w.-]/g, "_");
   return `<customer_data label="${safeLabel}">\n${safe}\n</customer_data>`;
 }

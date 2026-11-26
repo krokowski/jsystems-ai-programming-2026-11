@@ -252,6 +252,34 @@ describe("POST /api/cases/{id}/chat", () => {
     expect(stored?.chatBusy).toBe(false);
   });
 
+  it("a failed turn after an accepted update leaves the decision unchanged; a retry applies it once", async () => {
+    const caseId = await prepareDecided({
+      fields: COMPLAINT,
+      screening: "s1-complaint-deny.json",
+      decisionStep: withContent(loadCapture("s5-decision.json"), { decision: "manual_review", citedRules: ["C4.3"] }),
+    });
+    const message = userMessage(QUESTION);
+    stubReplay([acceptedSteps[0] as ReplayStep, { capture: loadCapture("s6-chat-401.json") }]);
+    const failed = await chatRequest(caseId, message);
+    expect(failed.status).toBe(200);
+    const text = await readText(failed);
+    expect(text).toContain(pl.chat.error);
+    const afterFailure = getCaseRepository().get(caseId);
+    expect(afterFailure?.decision?.decision).toBe("manual_review");
+    expect(afterFailure?.decisionHistory).toHaveLength(1);
+    expect(afterFailure?.chatBusy).toBe(false);
+    expect(afterFailure?.messages.map((m) => m.role)).toEqual(["assistant", "user"]);
+
+    stubReplay(acceptedSteps);
+    const retried = await chatRequest(caseId, message, "regenerate-message");
+    expect((await readChunks(retried)).map((c) => c.type)).toContain("data-decision");
+    const stored = getCaseRepository().get(caseId);
+    expect(stored?.decision).toMatchObject({ decision: "approve", origin: "chat_update" });
+    expect(stored?.decisionHistory).toHaveLength(2);
+    expect(stored?.messages.map((m) => m.role)).toEqual(["assistant", "user", "assistant"]);
+    expect(stored?.chatBusy).toBe(false);
+  });
+
   it("scenario 10b: derived approve on a date-rejected case is refused, decision unchanged", async () => {
     const caseId = await prepareDecided({
       fields: { ...COMPLAINT, purchaseDate: "2024-01-01" },
@@ -320,6 +348,21 @@ describe("POST /api/cases/{id}/chat", () => {
     const ok = await chatRequest(caseId, userMessage("a".repeat(2000)));
     expect(ok.status).toBe(200);
     await readChunks(ok);
+  });
+
+  it("rejects text longer than 2000 raw characters even when it trims shorter; stores the trimmed text", async () => {
+    const caseId = await prepareDecided();
+    stubReplay(refusedSteps);
+    const padded = await chatRequest(caseId, userMessage("a" + " ".repeat(5000)));
+    expect(padded.status).toBe(422);
+    expect((await errorOf(padded)).code).toBe("VALIDATION_FAILED");
+    expect(replay.calls).toHaveLength(0);
+    expect(getCaseRepository().get(caseId)?.messages).toHaveLength(1);
+    const ok = await chatRequest(caseId, userMessage("  hej  "));
+    expect(ok.status).toBe(200);
+    await readChunks(ok);
+    const stored = getCaseRepository().get(caseId)?.messages.find((m) => m.role === "user");
+    expect(stored?.parts).toEqual([{ type: "text", text: "hej" }]);
   });
 
   it("invalid JSON body -> 422", async () => {

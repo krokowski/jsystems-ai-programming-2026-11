@@ -51,7 +51,7 @@ function caseFacts(input: VisionInput): string {
   return [
     `Case type: ${input.caseType}`,
     `Declared category: ${form.category} (${pl.form.categoryLabels[form.category]})`,
-    `Product name: ${form.productName}`,
+    `Product name:\n${customerDataBlock("product_name", form.productName)}`,
     `Purchase date: ${form.purchaseDate}`,
   ].join("\n");
 }

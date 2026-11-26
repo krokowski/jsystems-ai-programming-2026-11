@@ -255,6 +255,33 @@ describe("CaseFlow over captured HTTP responses", () => {
     expect(screen.getByRole("img", { name: "phone-1.jpg" })).toBeInTheDocument();
   });
 
+  it("revokes the first photo URL exactly once when the photo is replaced after 'Wróć do formularza'", async () => {
+    installRouter({ ...OK_FLOW, analysis: ["api-analysis-502.json"] });
+    const user = setup();
+    await fillAndSubmit(user);
+    await screen.findByRole("alert", undefined, { timeout: 5000 });
+    const createMock = vi.mocked(URL.createObjectURL);
+    const revokeMock = vi.mocked(URL.revokeObjectURL);
+    const firstUrl = createMock.mock.results[0]?.value;
+    if (typeof firstUrl !== "string") throw new Error("no first object URL");
+
+    await user.click(screen.getByRole("button", { name: pl.processing.backToForm }));
+    await screen.findByLabelText(pl.form.productNameLabel);
+    await user.upload(
+      screen.getByLabelText(pl.form.photoLabel),
+      new File([new Uint8Array(PHOTO_BYTES)], "phone-2.jpg", { type: "image/jpeg" }),
+    );
+    await screen.findByText("phone-2.jpg");
+    const secondUrl = createMock.mock.results[1]?.value;
+    if (typeof secondUrl !== "string") throw new Error("no second object URL");
+    await user.click(screen.getByRole("button", { name: pl.form.submit }));
+    await screen.findByRole("alert", undefined, { timeout: 5000 });
+
+    const revoked = revokeMock.mock.calls.map(([url]) => url);
+    expect(revoked.filter((url) => url === firstUrl)).toHaveLength(1);
+    expect(revoked).not.toContain(secondUrl);
+  });
+
   it("treats a 409 on /decision as the processing error (A6)", async () => {
     installRouter({ ...OK_FLOW, decision: ["api-decision-409.json"] });
     const user = setup();
