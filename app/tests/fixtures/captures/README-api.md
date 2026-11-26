@@ -16,8 +16,8 @@ Server phases: `auto` (default `ANALYSIS_ESCALATION`), `always` (`ANALYSIS_ESCAL
 | `api-analysis-404.json` | POST http://localhost:3010/api/cases/<caseId>/analysis | 404 | 2026-11-26T11:34:21Z | Unknown (random UUID) case id. |
 | `api-analysis-502.json` | POST http://localhost:3010/api/cases/<caseId>/analysis | 502 | 2026-11-26T11:36:15Z | Server started with an invalid OpenRouter key; OpenRouter rejects the call. |
 | `api-chat-200-answer.json` | POST http://localhost:3010/api/cases/<caseId>/chat | 200 | 2026-11-26T11:34:46Z | Chat on case 1; SSE stored verbatim. |
-| `api-chat-200-update-attempt1.json` | POST http://localhost:3010/api/cases/<caseId>/chat | 200 | 2026-11-26T11:35:09Z | Complaint chat attempt 1. data-decision chunk present: see rawText. |
-| `api-chat-200-update-attempt2.json` | POST http://localhost:3010/api/cases/<caseId>/chat | 200 | 2026-11-26T11:35:30Z | Complaint chat attempt 2. data-decision chunk present: see rawText. |
+| `api-chat-200-update-attempt1.json` | POST http://localhost:3010/api/cases/<caseId>/chat | 200 | 2026-11-26T11:35:09Z | Complaint chat attempt 1. No data-decision chunk: the model did not call updateDecision (text deltas only). |
+| `api-chat-200-update-attempt2.json` | POST http://localhost:3010/api/cases/<caseId>/chat | 200 | 2026-11-26T11:35:30Z | Complaint chat attempt 2. No data-decision chunk: the model did not call updateDecision (text deltas only). |
 | `api-chat-409.json` | POST http://localhost:3010/api/cases/<caseId>/chat | 409 | 2026-11-26T11:34:46Z | Second chat request (id differs) sent right after the first one's response headers arrived (request A status 2 |
 | `api-create-201.json` | POST http://localhost:3010/api/cases | 201 | 2026-11-26T11:34:21Z | Valid return, Smartfon, purchase today-3 (Europe/Warsaw). |
 | `api-create-413.json` | POST http://localhost:3010/api/cases | 413 | 2026-11-26T11:34:21Z | Synthetic 12 MB body with a JPEG header (over the 11 MB request limit, A17). |
