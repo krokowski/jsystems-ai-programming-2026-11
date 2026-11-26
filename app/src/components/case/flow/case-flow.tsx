@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { use, useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { io } from "next/cache";
 import { ChatScreen } from "@/components/case/chat/chat-screen";
 import { CaseFormScreen } from "@/components/case/form/case-form-screen";
 import { ProcessingScreen } from "@/components/case/processing/processing-screen";
@@ -24,6 +25,9 @@ const FIELD_FOCUS_IDS = [
 
 export function CaseFlow(): React.JSX.Element {
   const [state, dispatch] = useReducer(flowReducer, initialFlowState);
+  // "Today" must be the visitor's date, not the build date: io() keeps this read out of
+  // the Cache Components prerender (page.tsx wraps CaseFlow in <Suspense>).
+  use(io());
   const [today] = useState(() => todayInAppZone(new Date()));
 
   const processingCaseId = state.kind === "processing" ? state.caseId : null;
