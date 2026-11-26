@@ -19,6 +19,7 @@ export default defineConfig({
             "src/lib/**/*.test.ts",
             "tests/integration/**/*.test.ts",
             "tests/unit/**/*.test.ts",
+            "tests/support/**/*.test.ts",
           ],
           setupFiles: ["./tests/setup/unit.ts"],
           testTimeout: 20_000,
