@@ -12,7 +12,8 @@ cp ../.env.example .env.local   # then fill OPENROUTER_API_KEY
 pnpm dev                        # http://localhost:3000
 pnpm test                       # Vitest: unit + ui projects
 pnpm test:e2e                   # Playwright on the production build, real OpenRouter (costs credits)
-pnpm verify                     # typecheck + lint + test + build, before every commit
+pnpm test:perf                  # TAC-06 timing check, run alone
+pnpm verify                     # typecheck + lint + test + test:perf + build, before every commit
 ```
 
 Playwright browsers: `pnpm exec playwright install chromium firefox webkit`.
@@ -37,18 +38,18 @@ Playwright browsers: `pnpm exec playwright install chromium firefox webkit`.
 
 ### Environment
 - [x] `.env.example` with required env vars (API keys, ports)
-- [ ] `.env` created locally (gitignored)
+- [x] `.env.local` created locally in `app/` (gitignored)
 - [x] `.gitignore` (node_modules, .env, build output, etc.)
 
 ### AI integration
 - [x] Vercel AI SDK (`ai` package) or equivalent
-- [ ] API route / endpoint for chat
-- [ ] Model configuration (provider, model name, API key from env)
+- [x] API route / endpoint for chat (`/api/cases/{id}/chat`)
+- [x] Model configuration (provider, model name, API key from env)
 
 ### Design
 - [x] Design tokens (`../assets/design-tokens.json`)
 - [x] Tailwind CSS or equivalent
-- [ ] Logo and favicon (`../assets/`)
+- [x] Logo and favicon (`../assets/`)
 - [x] Design system doc (`../docs/design-guidelines.md`)
 
 ### Documentation
