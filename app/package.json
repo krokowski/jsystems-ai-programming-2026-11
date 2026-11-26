@@ -8,10 +8,11 @@
     "start": "next start",
     "lint": "eslint --max-warnings 0",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
+    "test": "vitest run --project unit --project ui",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm build"
+    "verify": "pnpm typecheck && pnpm lint && pnpm test && pnpm test:perf && pnpm build",
+    "test:perf": "vitest run --project perf"
   },
   "dependencies": {
     "@ai-sdk/react": "^4.0.186",

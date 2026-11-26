@@ -65,16 +65,6 @@ describe("POST /api/cases: valid create", () => {
     expect(res.status).toBe(201);
   });
 
-  it("creates laptop-1.png in under 1000 ms (TAC-06)", async () => {
-    const photo = examplePhoto("laptop-1.png", "image/png");
-    const request = buildCreateRequest(VALID_FIELDS, photo);
-    const start = performance.now();
-    const res = await POST(request);
-    const elapsed = performance.now() - start;
-    console.log(`laptop-1.png create: ${elapsed.toFixed(0)} ms`);
-    expect(res.status).toBe(201);
-    expect(elapsed).toBeLessThan(1000);
-  });
 });
 
 describe("POST /api/cases: field validation", () => {

@@ -21,8 +21,9 @@ Stack-specific rules for `app/`. The root `AGENTS.md` holds the generic workflow
 | `pnpm typecheck` | `tsc --noEmit` |
 | `pnpm lint` | ESLint, 0 warnings allowed |
 | `pnpm test` | Vitest: projects `unit` (node) and `ui` (jsdom) |
+| `pnpm test:perf` | TAC-06 timing check, run alone (project `perf`) |
 | `pnpm test:e2e` | Playwright on the production build with real OpenRouter. Costs credits |
-| `pnpm verify` | typecheck + lint + test + build. **Run before every commit** |
+| `pnpm verify` | typecheck + lint + test + test:perf + build. **Run before every commit** |
 
 pnpm is activated through Corepack in `~/.local/bin` (the VM user cannot write `/usr/bin`). Native build scripts are allowed in `pnpm-workspace.yaml` (`sharp`, `esbuild`).
 

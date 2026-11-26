@@ -23,6 +23,7 @@ export default defineConfig({
           ],
           setupFiles: ["./tests/setup/unit.ts"],
           testTimeout: 20_000,
+          sequence: { groupOrder: 0 },
         },
       },
       {
@@ -33,6 +34,19 @@ export default defineConfig({
           include: ["src/components/**/*.test.tsx", "tests/components/**/*.test.tsx"],
           setupFiles: ["./tests/setup/ui.ts"],
           testTimeout: 20_000,
+          sequence: { groupOrder: 0 },
+        },
+      },
+      {
+        // Timing checks run alone, after the other projects (TAC-06).
+        extends: true,
+        test: {
+          name: "perf",
+          environment: "node",
+          include: ["tests/perf/**/*.test.ts"],
+          setupFiles: ["./tests/setup/unit.ts"],
+          testTimeout: 20_000,
+          sequence: { groupOrder: 1 },
         },
       },
     ],

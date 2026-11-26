@@ -39,7 +39,7 @@ function readPolicy(policyDir: string, caseType: CaseType): Policy {
   const fileName = POLICY_FILES[caseType];
   let text: string;
   try {
-    text = readFileSync(join(policyDir, fileName), "utf8");
+    text = readFileSync(join(/*turbopackIgnore: true*/ policyDir, fileName), "utf8");
   } catch {
     throw new Error(`Cannot read policy file ${fileName} in ${policyDir}`);
   }
