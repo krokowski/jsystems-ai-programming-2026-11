@@ -273,10 +273,22 @@ describe("CaseSummary", () => {
     expect(screen.getByTestId("summary-decision")).toHaveTextContent("Zaakceptowano");
   });
 
+  it("always renders the details in a desktop block that is not collapsible", () => {
+    setup();
+    const block = screen.getByTestId("summary-details-desktop");
+    expect(block.className).toContain("md:grid");
+    expect(block).toHaveTextContent("Smartfon");
+    expect(block).toHaveTextContent("Galaxy S24");
+    expect(block).toHaveTextContent("03.11.2026");
+    expect(block).toHaveTextContent(pl.chat.summary.caseType);
+    expect(within(block).getByRole("button", { name: pl.chat.photoThumbnail })).toBeInTheDocument();
+    expect(screen.getAllByTestId("summary-decision")).toHaveLength(1);
+  });
+
   it("opens the full photo in a dialog from the thumbnail", async () => {
     const { user } = setup();
     await user.click(screen.getByRole("button", { name: pl.chat.showDetails }));
-    await user.click(screen.getByRole("button", { name: pl.chat.photoThumbnail }));
+    await user.click(screen.getAllByRole("button", { name: pl.chat.photoThumbnail }).at(0) ?? document.body);
     const dialog = await screen.findByRole("dialog");
     expect(within(dialog).getByText(pl.chat.photoDialogTitle)).toBeInTheDocument();
     expect(dialog.querySelector("img")).toHaveAttribute("src", "blob:photo");
@@ -287,5 +299,17 @@ describe("CaseSummary", () => {
     const toggle = screen.getByRole("button", { name: pl.chat.showDetails });
     await user.click(toggle);
     expect(screen.getByRole("button", { name: pl.chat.hideDetails })).toBeInTheDocument();
+  });
+});
+
+describe("assistant markdown lists", () => {
+  it("renders next steps as an ordered list with list styling classes", () => {
+    setup();
+    const ol = screen.getByRole("article").querySelector("ol");
+    expect(ol).not.toBeNull();
+    expect(ol?.querySelectorAll("li")).toHaveLength(3);
+    const wrapper = ol?.parentElement?.closest('[class*="[&_ol]:list-decimal"]');
+    expect(wrapper).not.toBeNull();
+    expect(wrapper?.className).toContain("[&_ul]:list-disc");
   });
 });

@@ -4,6 +4,10 @@ import { pl } from "@/lib/i18n-pl";
 import { DecisionBadge, DecisionIcon, decisionTone } from "./decision-badge";
 import { cn } from "@/lib/utils";
 
+// Tailwind preflight strips list markers; restore them for assistant Markdown only.
+const LIST_STYLES =
+  "[&_ol]:list-decimal [&_ul]:list-disc [&_ol]:list-outside [&_ul]:list-outside [&_ol]:pl-5 [&_ul]:pl-5 [&_ol]:space-y-1 [&_ul]:space-y-1 [&_li]:pl-1";
+
 type Part = AppUIMessage["parts"][number];
 
 function DecisionUpdateBlock({ data }: { data: DecisionData }) {
@@ -61,7 +65,9 @@ export function CaseMessage({ message }: { message: AppUIMessage }) {
         {message.parts.map((part, i) => {
           if (part.type === "text") {
             return part.text.trim() === "" ? null : (
-              <MessageResponse key={i}>{part.text}</MessageResponse>
+              <MessageResponse key={i} className={LIST_STYLES}>
+                {part.text}
+              </MessageResponse>
             );
           }
           if (part.type === "data-decision" && part.data.origin === "initial") {

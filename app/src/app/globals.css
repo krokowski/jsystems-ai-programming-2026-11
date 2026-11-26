@@ -97,6 +97,14 @@
     --sidebar-border: rgba(255, 255, 255, 0.1);
     --sidebar-ring: #00aee8;
     color-scheme: dark;
+    /* Sticky site header height (site-header.tsx); mobile titles wrap, so it is taller there. */
+    --header-h: 6rem;
+}
+
+@media (min-width: 768px) {
+    :root {
+        --header-h: 4.5rem;
+    }
 }
 
 @layer base {
@@ -109,5 +117,6 @@
     }
   html {
     @apply font-sans;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
     }
 }
