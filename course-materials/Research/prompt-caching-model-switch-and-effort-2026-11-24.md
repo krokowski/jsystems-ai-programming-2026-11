@@ -1,6 +1,32 @@
 # Prompt caching when switching models or effort
 
-Checked 2026-11-24 against live official documentation.
+Checked 2026-11-24 against live official documentation. Claude Code section and user reports added 2026-11-25.
+
+## Claude Code: what breaks the cache and what keeps it
+
+Source: [How Claude Code uses prompt caching](https://code.claude.com/docs/en/prompt-caching). The cache matches the exact start of each request (prefix): tools and system prompt, then project context (CLAUDE.md, memory), then the conversation. A change anywhere recomputes everything after it.
+
+**One slower, uncached turn:**
+- **Model switch** (`/model`, `opusplan` plan-mode toggles, a skill with its own `model`, automatic fallback). Each model has its own cache.
+- **Effort change**, except on Fable 5.1+ and Opus, Sonnet and Haiku 5.5 with an API key or a Claude subscription, where the cache stays. On Bedrock, Google Cloud, a Claude apps gateway, with `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` or a HIPAA configuration, effort changes break it on every model.
+- **Fast mode** on or off (separate cache per speed).
+- **MCP server connected or removed** only when tools load upfront. With tool search, the default on supported models, the tool list is frozen at the first request and MCP changes keep the cache. The same rule covers plugins that bring MCP servers and denying a whole tool (`Bash`, `WebFetch`).
+- **`/compact`**, removal of old images, and the first session after a Claude Code upgrade.
+
+**Cache kept:**
+- Editing files, editing the root or user CLAUDE.md mid-session (it reloads only after `/clear`, `/compact` or a restart), changing permission mode or output style, invoking skills and commands (appended as messages), plugin skills, agents and hooks, `/recap`, `/rewind`.
+- Subagents build their own cache; the parent's cache is untouched.
+
+**Lifetime:** on a subscription within plan usage the main conversation gets 1 hour, subagents 5 minutes. With an API key or usage credits the main conversation gets 5 minutes. Set `promptCacheTtl` (or `CLAUDE_CODE_PROMPT_CACHE_TTL`) to `5m` or `1h`.
+
+**Why the status line ratio barely moves after `/model`:** `prompt_cache.hit_ratio` is cache-read tokens divided by all input tokens for the whole session, main conversation only ([status line fields](https://code.claude.com/docs/en/statusline)). Every tool call is a separate request that re-reads the context, so even a short session has many requests. Example: 100 requests of about 50k tokens is 5M input tokens; one full re-read of 50k after `/model` lowers the ratio by about one point. Watch `misses` and `last_miss_cause` in the status line JSON or the `Prompt cache (main)` line in `/usage` instead. Switching back to the previous model within its TTL can read that model's still-warm cache, so the return is cheap.
+
+## What users measured (checked 2026-11-25)
+
+- **Model switch:** in 770 sessions, a real model change rewrote 86% of the prior conversation versus 0.43% on ordinary turns ([zenn.dev, 2026-08-27](https://zenn.dev/aika_paranoid/articles/model-switch-cache)). Another log shows a switch to Sonnet still reading 34k tokens from a Sonnet cache warmed by a parallel session in the same folder, and the switch back to Opus costing 67 write tokens ([qiita.com, 2026-09-01](https://qiita.com/suwa_nobu/items/5fe930eb46d064b3da06)). Parallel sessions in the same directory share the prefix, so a switch is not always a full miss.
+- **Effort:** effort changes broke the cache on Opus 5 and Sonnet 5 but not on Fable 5.1 ([issue #92444](https://github.com/anthropics/claude-code/issues/92444), open). This matches the current docs, which keep the cache only on Fable 5.1+ and the 5.5 models.
+- **Real bugs, since fixed or open:** the subscription TTL silently fell from 1 hour to 5 minutes in March 2026 ([#46829](https://github.com/anthropics/claude-code/issues/46829)) and again for Team premium seats in v2.1.301 ([#102693](https://github.com/anthropics/claude-code/issues/102693), workaround `promptCacheTtl: "1h"`). Intermittent mid-session misses ([#87966](https://github.com/anthropics/claude-code/issues/87966)) and `claude -p` missing the cache after a turn without thinking ([#100065](https://github.com/anthropics/claude-code/issues/100065), open).
+- **Hidden reasoning:** Anthropic returns summarized and encrypted thinking on purpose, to make distillation harder ([Anthropic research, 2026-10-12](https://www.anthropic.com/research/distillation-defenses), [preserved thinking](https://support.claude.com/en/articles/16761192-preserved-thinking-changing-how-the-messages-api-handles-thinking-blocks-to-protect-against-distillation)). No source was found claiming that cache token counts are reported falsely; all the reported anomalies trace to client bugs, TTL changes or the session-wide average.
 
 | Question | Answer | Source |
 | --- | --- | --- |

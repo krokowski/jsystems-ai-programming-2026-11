@@ -1,5 +1,23 @@
 # UPDATES !!!
 
+## Po trzecim dniu (25.11)
+
+**Kod i repozytorium**
+- `main` zostaje punktem startowym kursu; aplikację rozwijasz w swojej gałęzi `app-implementation`.
+- [PR #6](https://github.com/LucasMatuszewski/jsystems-ai-programming-2026-11/pull/6) w gałęzi `design-system`: design system DevPowers zrobiony skillem `create-design-system`.
+
+**Podsumowanie i czat**
+- [Podsumowanie dnia 3](course-materials/zoom-summary-chat-history/day-3-summary.md): recenzja PR przez Codex, design system, skróty Claude Code (`/btw`, `/fork`, `/rewind`, `Ctrl+G` z edytorem Micro), Spec-Driven Development, PRD, ADR i plan z `/goal`, AG-UI, OpenRouter i modele decyzyjne, prompt caching, Context7, OpenCode.
+- [Historia czatu z dnia 3](course-materials/zoom-summary-chat-history/day-3-chat-history.md) ze wszystkimi linkami, poleceniami i promptami z zajęć.
+
+**Poprawiony prompt planu**
+- [Plan z subagentami i mapą zależności](course-materials/Prompt%20examples/Plan-SubAgents-matrix-dependency-map.md) planuje teraz całą aplikację z PRD i ADR, tak aby silny model mógł ją zbudować samodzielnie z `/goal`; nadal możesz realizować ją etapami. Dodaje przegląd spójności dokumentów, testy E2E i manualne bez mocków, briefy agentów w `docs/.agent-briefs/` usuwane po realizacji planu oraz delegowanie przez OpenCode w trybie headless.
+- Prompt ma dwie wersje: [Claude Code](course-materials/Prompt%20examples/Plan-SubAgents-matrix-dependency-map.md) (Opus 5.5 jako orkiestrator, subagenci Sonnet 5.5 i Haiku 5.5) oraz [Codex](course-materials/Prompt%20examples/Plan-SubAgents-matrix-dependency-map-CODEX.md) (GPT-6.2 Sol jako orkiestrator, subagenci GPT-6 Luna i GPT-6.1 Terra). Obie delegują też tanie zadania do OpenCode. Pod promptem w wersji Claude Code są kroki poprawek planu i prompt do stworzenia własnego skilla do planowania.
+
+**Na rano w dniu 4**
+- Dokończ plan swojej aplikacji i sprawdź spójność planu, PRD, ADR i `AGENTS.md`.
+- Dodaj do `AGENTS.md` regułę: dokumentację bibliotek i narzędzi agent sprawdza najpierw w Context7 (`ctx7`) i w pomocy CLI (np. `gh --help`), a wyszukiwarki używa tylko awaryjnie, bo zużywa znacznie więcej tokenów. Research domyślnie deleguje do subagentów lub agentów CLI.
+
 ## Po drugim dniu (24.11)
 
 **Kod i repozytorium**
