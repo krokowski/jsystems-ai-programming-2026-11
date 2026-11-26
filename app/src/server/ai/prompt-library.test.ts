@@ -32,6 +32,14 @@ const ALL: ReadonlyArray<readonly [PromptName, Readonly<Record<string, string>>]
   ["chat-system", CHAT_VARS],
 ];
 
+describe("vision prompts: categoryMatch is about the product type only (PRD AC-13, 4.4)", () => {
+  it.each(["vision-return", "vision-complaint"] as const)("%s does not tie categoryMatch to the product name", (name) => {
+    const raw = readFileSync(path.join(PROMPT_DIR, `${name}.md`), "utf8");
+    expect(raw).toContain("Judge only the type");
+    expect(raw).not.toContain("declared category and product name");
+  });
+});
+
 describe("PromptLibrary", () => {
   it("points PROMPT_DIR at the prompts folder", () => {
     expect(PROMPT_DIR).toBe(path.join(process.cwd(), "src/server/ai/prompts"));
@@ -39,10 +47,11 @@ describe("PromptLibrary", () => {
 
   it.each(ALL)("%s has a version header that is parsed and stripped", (name, vars) => {
     const raw = readFileSync(path.join(PROMPT_DIR, `${name}.md`), "utf8");
-    expect(raw.startsWith(`<!-- prompt: ${name} | version: 2026-11-26.1 -->`)).toBe(true);
+    const header = /^<!-- prompt: ([\w-]+) \| version: (\d{4}-\d{2}-\d{2}\.\d+) -->/.exec(raw);
+    expect(header?.[1]).toBe(name);
     const rendered = renderPrompt(name, vars);
     expect(rendered.name).toBe(name);
-    expect(rendered.version).toBe("2026-11-26.1");
+    expect(rendered.version).toBe(header?.[2]);
     expect(rendered.text).not.toContain("<!-- prompt:");
   });
 
