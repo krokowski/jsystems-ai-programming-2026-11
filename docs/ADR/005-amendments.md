@@ -10,7 +10,7 @@
 
 On 2026-11-26 a consistency review compared the PRD, the ADR set, `AGENTS.md` and the implementation plan. It found contradictions and gaps that would leave an implementing agent unsure what to do.
 
-This ADR records each resolution as an amendment (A1–A21). The amended ADRs are not rewritten, so the original decisions stay traceable. Each amended ADR has a header note pointing here.
+This ADR records each resolution as an amendment (A1–A21). A22 was added after spike S1 (gate G2). The amended ADRs are not rewritten, so the original decisions stay traceable. Each amended ADR has a header note pointing here.
 
 Rule for agents: **when an ADR-000 – ADR-004 statement conflicts with an amendment below, follow the amendment.**
 
@@ -215,6 +215,16 @@ Rule for agents: **when an ADR-000 – ADR-004 statement conflicts with an amend
 - Add `firefox` and `webkit` projects for the smoke spec and the return happy-path spec only, so AI credit use stays small.
 - Install the browsers with `pnpm exec playwright install chromium firefox webkit`.
 - Edge is covered by Chromium. Real iOS Safari and real Android devices are not available on the course VM. WebKit at 360 px approximates iOS Safari. This is a documented residual risk.
+
+### A22. Certainty of yes/no (`noul`) screening answers
+**Amends:** ADR-002 §3.2 (answer mapping), §6.1.
+**Context:** spike S1 (2026-11-26, `app/tests/fixtures/captures/s1-findings.md`) showed that the Decisions API returns `confidence` only for `score` and `choice` answers. A `noul` answer carries only the probability of true (`answers.<key>.noul`), with no `confidence` and no `probabilities`.
+**Decision:**
+- For a `noul` area the confidence is derived as `max(p, 1 − p)`. The area is certain when that value is `≥ SCREENING_CONFIDENCE_THRESHOLD` (default 0.8), so `p ≥ 0.8` or `p ≤ 0.2`.
+- `score` and `choice` areas keep using the `confidence` returned by the API.
+- The stored `ScreeningArea.confidence` holds the derived value for `noul` areas, so the stage log stays comparable across types.
+- Cost accounting: when `usage.cost` is 0 because the key is BYOK, the stage log records `usage.cost_details.upstream_inference_cost` instead.
+- Decided by the product owner on 2026-11-26 (gate G2).
 
 ---
 
