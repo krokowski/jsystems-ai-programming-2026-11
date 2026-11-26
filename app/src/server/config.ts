@@ -81,7 +81,8 @@ export function parseConfig(env: Record<string, string | undefined>): AppConfig 
     decisionsModel: data.DECISIONS_MODEL,
     screeningConfidenceThreshold: data.SCREENING_CONFIDENCE_THRESHOLD,
     analysisEscalation: data.ANALYSIS_ESCALATION,
-    policyDir: resolve(process.cwd(), data.POLICY_DIR),
+    // Policies live outside app/ (../docs/policies); they are read at runtime, not bundled.
+    policyDir: resolve(/*turbopackIgnore: true*/ process.cwd(), data.POLICY_DIR),
     caseTtlMinutes: data.CASE_TTL_MINUTES,
   };
 }
