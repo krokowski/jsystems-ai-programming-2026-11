@@ -89,6 +89,7 @@ jobs:
         env:
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           CLAUDE_MODEL: ${{ vars.CLAUDE_MODEL }}
+          TRUNCATED: ${{ steps.diff.outputs.truncated }}
         run: |
           set -euo pipefail
           prompt=$(cat <<'EOF'
@@ -103,6 +104,9 @@ jobs:
           Write "None" in a section with no issues. Never claim that tests were run.
           EOF
           )
+          if [[ "$TRUNCATED" == true ]]; then
+            prompt+=$'\n\nThe diff was cut at a size limit, so its last file or hunk may be incomplete. Do not report problems caused only by the cut; say in the Summary that the review covers part of the PR.'
+          fi
           model_args=()
           [[ -n "${CLAUDE_MODEL:-}" ]] && model_args=(--model "$CLAUDE_MODEL")
           claude -p "$prompt" "${model_args[@]}" \
@@ -128,7 +132,9 @@ jobs:
             echo "$marker"
             echo "# 🤖 Claude Code headless review"
             echo
-            jq -r '.result' review.json
+            # Model output comes from an untrusted diff: break @mentions (zero-width space after @)
+            # so it cannot notify people, and stay under GitHub's 65536-character comment limit.
+            jq -r '.result | .[0:60000] | gsub("@"; "@​")' review.json
             echo
             echo "<details><summary>Run details</summary>"
             echo
