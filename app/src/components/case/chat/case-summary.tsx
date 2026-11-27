@@ -27,22 +27,22 @@ export function CaseSummary({ summary, photoUrl }: CaseSummaryProps) {
   ];
 
   const details = (
-    <div className="mt-3 flex gap-3">
+    <div className="mt-3 flex gap-4">
       <Button
         type="button"
         variant="outline"
         aria-label={pl.chat.photoThumbnail}
-        className="size-20 shrink-0 overflow-hidden p-0"
+        className="size-24 shrink-0 overflow-hidden rounded-xl p-0"
         onClick={() => setPhotoOpen(true)}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={summary.thumbnailDataUrl} alt="" className="size-full object-cover" />
       </Button>
-      <dl className="grid min-w-0 flex-1 grid-cols-[auto_1fr] gap-x-3 gap-y-1">
+      <dl className="grid min-w-0 flex-1 grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:grid-cols-4">
         {rows.map(([label, value]) => (
-          <div key={label} className="col-span-2 grid grid-cols-subgrid">
-            <dt className="text-muted-foreground">{label}</dt>
-            <dd className="min-w-0 break-words">{value}</dd>
+          <div key={label} className="flex min-w-0 flex-col gap-0.5">
+            <dt className="text-xs text-muted-foreground">{label}</dt>
+            <dd className="min-w-0 text-[15px] font-semibold break-words text-foreground">{value}</dd>
           </div>
         ))}
       </dl>
@@ -50,7 +50,7 @@ export function CaseSummary({ summary, photoUrl }: CaseSummaryProps) {
   );
 
   return (
-    <section className="rounded-xl border bg-card p-3 text-sm">
+    <section className="rounded-2xl bg-card p-4 text-sm shadow-card md:p-5">
       <div className="flex items-center gap-2">
         <span className="min-w-0 flex-1 truncate font-medium md:hidden">{summary.productName}</span>
         <div data-testid="summary-decision" className="ml-auto md:ml-0">
@@ -61,8 +61,7 @@ export function CaseSummary({ summary, photoUrl }: CaseSummaryProps) {
         <Button
           type="button"
           variant="ghost"
-          size="sm"
-          className="md:hidden"
+          className="size-11 md:hidden"
           aria-expanded={open}
           onClick={() => setOpen((value) => !value)}
         >

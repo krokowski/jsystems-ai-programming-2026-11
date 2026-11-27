@@ -5,19 +5,19 @@ import { pl } from "@/lib/i18n-pl";
 import { cn } from "@/lib/utils";
 
 const TONES: Record<Decision, string> = {
-  approve: "border-(--color-decision-approve) bg-(--color-decision-approve)/15",
-  reject: "border-(--color-decision-reject) bg-(--color-decision-reject)/15",
-  manual_review: "border-(--color-decision-review) bg-(--color-decision-review)/15",
+  approve: "border-transparent bg-decision-approve-bg text-decision-approve",
+  reject: "border-transparent bg-decision-reject-bg text-decision-reject",
+  manual_review: "border-transparent bg-decision-review-bg text-decision-review",
 };
 
 const ICON_TONES: Record<Decision, string> = {
-  approve: "text-(--color-decision-approve)",
-  reject: "text-(--color-decision-reject)",
-  manual_review: "text-(--color-decision-review)",
+  approve: "text-decision-approve",
+  reject: "text-decision-reject",
+  manual_review: "text-decision-review",
 };
 
 export function DecisionIcon({ decision, className }: { decision: Decision; className?: string }) {
-  const classes = cn("size-3.5 shrink-0", ICON_TONES[decision], className);
+  const classes = cn("size-4 shrink-0", ICON_TONES[decision], className);
   if (decision === "approve") {
     return <Check aria-hidden="true" className={classes} />;
   }
@@ -44,7 +44,7 @@ export function DecisionBadge({
     <Badge
       data-decision={decision}
       variant="outline"
-      className={cn("h-auto gap-1.5 py-1 text-foreground", TONES[decision], className)}
+      className={cn("h-auto gap-1.5 rounded-full px-3 py-1 text-[13px]", TONES[decision], className)}
     >
       <DecisionIcon decision={decision} />
       <span>{pl.decision.badgePrefix}</span>{" "}

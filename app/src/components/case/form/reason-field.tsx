@@ -19,8 +19,8 @@ export function ReasonField({ registration, caseType, length, error }: Props): R
   const helperId = "reason-helper";
   const helperType: CaseType = caseType === "complaint" ? "complaint" : "return";
   return (
-    <div className="flex flex-col gap-2">
-      <Label htmlFor="reason">
+    <div className="flex flex-col gap-2.5">
+      <Label htmlFor="reason" className="text-[15px] font-bold">
         <span>{pl.form.reasonLabel}</span>{" "}
         <span className="font-normal text-muted-foreground">
           {caseType === "complaint" ? pl.form.reasonRequired : pl.form.reasonOptional}
@@ -33,6 +33,7 @@ export function ReasonField({ registration, caseType, length, error }: Props): R
         id="reason"
         maxLength={REASON_MAX}
         rows={4}
+        className="min-h-28 rounded-[10px] bg-card px-3.5 py-3 focus-visible:ring-ring/30"
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${helperId} ${errorId}` : helperId}
         {...registration}

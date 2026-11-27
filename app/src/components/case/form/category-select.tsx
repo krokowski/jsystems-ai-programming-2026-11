@@ -21,8 +21,8 @@ const items = CATEGORIES.map((value) => ({ value, label: pl.form.categoryLabels[
 export function CategorySelect({ value, onChange, error }: Props): React.JSX.Element {
   const errorId = "category-error";
   return (
-    <div className="flex flex-col gap-2">
-      <Label id="category-label">{pl.form.categoryLabel}</Label>
+    <div className="flex flex-col gap-2.5">
+      <Label id="category-label" className="text-[15px] font-bold">{pl.form.categoryLabel}</Label>
       <Select
         items={items}
         value={value === "" ? null : value}
@@ -35,7 +35,7 @@ export function CategorySelect({ value, onChange, error }: Props): React.JSX.Ele
           aria-labelledby="category-label"
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? errorId : undefined}
-          className="h-11 w-full"
+          className="h-12 w-full rounded-[10px] bg-card px-3.5 text-base focus-visible:ring-ring/30"
         >
           <SelectValue placeholder={pl.form.categoryPlaceholder} />
         </SelectTrigger>

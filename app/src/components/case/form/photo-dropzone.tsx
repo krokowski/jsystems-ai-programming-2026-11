@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "cn";
+import { ImagePlus } from "lucide-react";
 import { useRef, useState } from "react";
 import type { PhotoDraft } from "@/components/case/flow/types";
 import { Button } from "@/components/ui/button";
@@ -56,8 +57,8 @@ export function PhotoDropzone({ value, onChange, error, onError, caseType }: Pro
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      <Label htmlFor="photo">{pl.form.photoLabel}</Label>
+    <div className="flex flex-col gap-2.5">
+      <Label htmlFor="photo" className="text-[15px] font-bold">{pl.form.photoLabel}</Label>
       <p id={helperId} className="text-sm text-muted-foreground">
         {pl.form.photoHelper[helperType]}
       </p>
@@ -85,20 +86,20 @@ export function PhotoDropzone({ value, onChange, error, onError, caseType }: Pro
           if (file) void handleFile(file);
         }}
         className={cn(
-          "flex flex-col gap-3 border border-dashed border-input p-4 transition-colors",
-          dragging && "border-primary bg-primary/10",
+          "flex flex-col gap-4 rounded-2xl border border-dashed border-[#c9cedd] bg-[#fafbfe] p-5 transition-colors",
+          dragging && "border-primary bg-secondary",
           error && "border-destructive",
         )}
       >
         {value ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-xl bg-card p-2 ring-1 ring-border">
             {/* eslint-disable-next-line @next/next/no-img-element -- local blob preview */}
-            <img src={value.objectUrl} alt={value.file.name} className="size-16 object-cover" />
+            <img src={value.objectUrl} alt={value.file.name} className="size-16 rounded-lg object-cover" />
             <span className="min-w-0 flex-1 truncate text-sm">{value.file.name}</span>
             <Button
               type="button"
               variant="outline"
-              className="h-11"
+              className="h-11 rounded-full px-5"
               onClick={() => {
                 release(value);
                 onChange(null);
@@ -114,10 +115,11 @@ export function PhotoDropzone({ value, onChange, error, onError, caseType }: Pro
             id="photo-button"
             type="button"
             variant="outline"
-            className="h-11"
+            className="h-11 rounded-full border-primary/30 bg-card px-5 text-primary hover:bg-secondary"
             aria-describedby={error ? errorId : undefined}
             onClick={() => inputRef.current?.click()}
           >
+            <ImagePlus aria-hidden="true" />
             {pl.form.photoButton}
           </Button>
           <span id={limitsId} className="text-sm text-muted-foreground">

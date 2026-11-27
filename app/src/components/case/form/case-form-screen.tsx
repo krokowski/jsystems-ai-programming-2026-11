@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm, useWatch, type DefaultValues, type Resolver } from "react-hook-form";
 import {
@@ -141,14 +142,17 @@ export function CaseFormScreen(props: CaseFormScreenProps): React.JSX.Element {
   }
 
   return (
-    <div className="mx-auto w-full max-w-180 px-4 py-6">
-      <p className="mb-4 text-base text-muted-foreground">{pl.common.intro}</p>
+    <div className="mx-auto w-full max-w-190 px-0 pt-6 pb-10 md:pt-12 md:pb-16">
+      <h1 className="text-[28px] leading-[1.15] font-bold tracking-[-0.01em] text-foreground md:text-[40px]">
+        {pl.common.formHeading}
+      </h1>
+      <p className="mt-3 mb-8 text-lg leading-relaxed text-muted-foreground">{pl.common.intro}</p>
       <form
         noValidate
         onSubmit={(e) => {
           void handleSubmit(onValid, onInvalid)(e);
         }}
-        className="flex flex-col gap-6 border border-border bg-card p-4 sm:p-6"
+        className="flex flex-col gap-7 rounded-2xl bg-card p-5 shadow-card sm:p-8 md:p-10"
       >
         <Controller
           control={control}
@@ -164,13 +168,13 @@ export function CaseFormScreen(props: CaseFormScreenProps): React.JSX.Element {
             <CategorySelect value={field.value ?? ""} onChange={field.onChange} error={errors.category?.message} />
           )}
         />
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="product-name">{pl.form.productNameLabel}</Label>
+        <div className="flex flex-col gap-2.5">
+          <Label htmlFor="product-name" className="text-[15px] font-bold">{pl.form.productNameLabel}</Label>
           <Input
             id="product-name"
             maxLength={PRODUCT_NAME_MAX}
             placeholder={pl.form.productNamePlaceholder}
-            className="h-11"
+            className="h-12 rounded-[10px] bg-card px-3.5 text-base focus-visible:ring-ring/30"
             aria-invalid={errors.productName ? true : undefined}
             aria-describedby={errors.productName ? "product-name-error" : undefined}
             {...register("productName")}
@@ -203,13 +207,25 @@ export function CaseFormScreen(props: CaseFormScreenProps): React.JSX.Element {
           caseType={caseType}
         />
         {formError ? (
-          <Alert variant="destructive">
-            <AlertDescription>{formError}</AlertDescription>
+          <Alert variant="destructive" className="rounded-xl border-0 bg-destructive/10 px-4 py-3">
+            <AlertDescription className="text-[#b42318]">{formError}</AlertDescription>
           </Alert>
         ) : null}
-        <Button type="submit" className="h-11" disabled={submitting}>
-          {pl.form.submit}
-        </Button>
+        <div className="flex sm:justify-end">
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="h-12 w-full gap-3 rounded-full pr-2 pl-7 text-base font-bold hover:bg-primary/90 sm:w-auto"
+          >
+            {pl.form.submit}
+            <span
+              aria-hidden="true"
+              className="flex size-8 items-center justify-center rounded-full bg-brand-accent text-navy"
+            >
+              <ArrowRight className="size-4" />
+            </span>
+          </Button>
+        </div>
       </form>
     </div>
   );

@@ -40,8 +40,8 @@ export function PurchaseDatePicker({ value, onChange, today, error }: Props): Re
   const minDate = parseIso(MIN_PURCHASE_DATE);
 
   return (
-    <div className="flex flex-col gap-2">
-      <Label id="purchase-date-label">{pl.form.purchaseDateLabel}</Label>
+    <div className="flex flex-col gap-2.5">
+      <Label id="purchase-date-label" className="text-[15px] font-bold">{pl.form.purchaseDateLabel}</Label>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           render={
@@ -52,11 +52,11 @@ export function PurchaseDatePicker({ value, onChange, today, error }: Props): Re
               aria-labelledby="purchase-date-label purchase-date"
               aria-invalid={error ? true : undefined}
               aria-describedby={error ? errorId : undefined}
-              className="h-11 w-full justify-start gap-2 font-normal"
+              className="h-12 w-full justify-start gap-2 rounded-[10px] border-input bg-card px-3.5 text-base font-normal hover:bg-muted"
             />
           }
         >
-          <CalendarIcon aria-hidden="true" />
+          <CalendarIcon aria-hidden="true" className="text-primary" />
           <span className={value ? undefined : "text-muted-foreground"}>
             {value ? formatDatePl(value) : pl.form.purchaseDatePlaceholder}
           </span>

@@ -76,9 +76,14 @@ export function ChatView({
   }
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-[720px] flex-1 flex-col gap-3 px-4 py-3">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-190 flex-1 flex-col gap-4 px-0 py-4 md:py-8">
       <div className="flex justify-end">
-        <Button type="button" variant="outline" size="sm" onClick={() => setDialogOpen(true)}>
+        <Button
+          type="button"
+          variant="outline"
+          className="h-11 rounded-full border-input bg-card px-5 text-sm text-primary hover:bg-secondary"
+          onClick={() => setDialogOpen(true)}
+        >
           <Plus aria-hidden="true" />
           {pl.chat.newCase}
         </Button>
@@ -93,8 +98,8 @@ export function ChatView({
           ))}
 
           {showTyping(status, messages) ? (
-            <Message from="assistant">
-              <MessageContent>
+            <Message from="assistant" className="max-w-[85%]">
+              <MessageContent className="group-[.is-assistant]:rounded-2xl group-[.is-assistant]:rounded-bl-md group-[.is-assistant]:bg-muted group-[.is-assistant]:px-4 group-[.is-assistant]:py-3">
                 <div className="flex items-center gap-2 text-muted-foreground">
                   <Spinner role="presentation" aria-hidden="true" />
                   <span>{pl.chat.typing}</span>
@@ -104,12 +109,12 @@ export function ChatView({
           ) : null}
 
           {status === "error" ? (
-            <Alert variant="destructive">
-              <AlertDescription className="text-destructive">
+            <Alert variant="destructive" className="rounded-xl border-0 bg-[#fdecec] px-4 py-3">
+              <AlertDescription className="text-[#b42318]">
                 {errorKind === "busy" ? pl.chat.busy : pl.chat.error}
               </AlertDescription>
               <div className="mt-2">
-                <Button type="button" variant="outline" size="sm" onClick={onRetry}>
+                <Button type="button" variant="outline" className="h-11 rounded-full px-5" onClick={onRetry}>
                   {pl.chat.retry}
                 </Button>
               </div>
@@ -119,7 +124,10 @@ export function ChatView({
         <ConversationScrollButton />
       </Conversation>
 
-      <PromptInput onSubmit={handleSubmit}>
+      <PromptInput
+        onSubmit={handleSubmit}
+        className="[&_[data-slot=input-group]]:rounded-2xl [&_[data-slot=input-group]]:bg-card [&_[data-slot=input-group]]:shadow-card"
+      >
         <PromptInputBody>
           <PromptInputTextarea
             aria-label={pl.chat.inputLabel}
@@ -129,7 +137,11 @@ export function ChatView({
           />
         </PromptInputBody>
         <PromptInputFooter className="justify-end">
-          <PromptInputSubmit aria-label={pl.chat.send} disabled={!canSend} />
+          <PromptInputSubmit
+            aria-label={pl.chat.send}
+            disabled={!canSend}
+            className="size-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+          />
         </PromptInputFooter>
       </PromptInput>
 
@@ -139,11 +151,12 @@ export function ChatView({
             <DialogTitle>{pl.chat.newCaseDialog.title}</DialogTitle>
           </DialogHeader>
           <DialogFooter>
-            <DialogClose render={<Button type="button" variant="outline" />}>
+            <DialogClose render={<Button type="button" variant="outline" className="h-11 rounded-full px-5" />}>
               {pl.chat.newCaseDialog.cancel}
             </DialogClose>
             <Button
               type="button"
+              className="h-11 rounded-full px-5"
               onClick={() => {
                 setDialogOpen(false);
                 onNewCase();

@@ -180,3 +180,27 @@ The signature control. It has no filled rectangular button.
 ## Visual style summary
 
 Asseco presents itself as a serious, enterprise-grade technology company with a calm, premium, dark-mode aesthetic. Deep navy and indigo backgrounds with soft glowing gradients and abstract 3D shapes suggest innovation without becoming playful. A single cyan accent is used sparingly for calls to action, so interactive elements stand out immediately. Typography is a clean geometric sans (Geomanist) set large and bold for headlines with plenty of whitespace, while square cards and photography keep the content grounded and corporate.
+
+## Application theme (light, 2026-11-27)
+
+The application UI uses a light theme. Reason: product owner request (the dark theme felt heavy; the first build copied Asseco colours and font but not its character) and Asseco itself uses light content bands (`background.light`, white cards, `logo-dark.svg`). The homepage extraction sections above are unchanged. Tokens live in `app/src/app/globals.css`.
+
+| Token | Value |
+|---|---|
+| `--background` | `#F6F7FB` |
+| `--card`, `--popover` | `#FFFFFF` |
+| `--foreground` | `#0F1335` (Asseco navy) |
+| `--muted-foreground` | `#5B6178` |
+| `--border` / `--input` | `#E4E7F0` / `#D5D9E5` |
+| `--primary` / `--primary-foreground` | `#252476` / `#FFFFFF` |
+| `--secondary` / `--accent` | `#EEF0FB` / `#E8F7FD` |
+| `--ring`, accent | `#00AEE8` (focus rings, active indicators, header gradient line, spinner; never a background for white text) |
+| `--destructive` | `#D93F44` (borders, icons; error text uses `#B42318`, 5.8:1) |
+
+- **Radius:** `--radius` 0.75rem; cards 16 px, inputs 10 px, buttons and badges pill (9999 px).
+- **Shadow:** cards `0 1px 2px rgba(15,19,53,.04), 0 8px 24px rgba(15,19,53,.06)` (`shadow-card`).
+- **Header:** sticky, white 85% with blur, `logo-dark.svg`, 3 px gradient line `#00AEE8 -> #3E3DC4 -> #252476`.
+- **Buttons:** primary is an indigo pill, 48 px high, with a trailing cyan circle holding an arrow; secondary is an outline pill (44 px).
+- **Decision pills:** approve `#E7F7EF` / `#16794A`, reject `#FDECEC` / `#B42318`, manual review `#E6F6FD` / `#036A8F`; each keeps its icon.
+- **Chat:** assistant messages in a `#F1F3F9` bubble, customer messages in an indigo bubble with white text.
+- **Contrast (WCAG):** navy on white 18.0:1, muted on white 6.1:1 (on `#F6F7FB` 5.7:1), white on indigo 13.2:1, decision pills 4.9 to 5.8:1.

@@ -14,9 +14,13 @@
     --color-brand-success: #2eb67d;
     --color-navy: #0f1335;
     --color-navy-deep: #0f1442;
-    --color-decision-approve: #2eb67d;
-    --color-decision-reject: #e5484d;
-    --color-decision-review: #00aee8;
+    --color-decision-approve: #16794a;
+    --color-decision-approve-bg: #e7f7ef;
+    --color-decision-reject: #b42318;
+    --color-decision-reject-bg: #fdecec;
+    --color-decision-review: #036a8f;
+    --color-decision-review-bg: #e6f6fd;
+    --shadow-card: 0 1px 2px rgba(15, 19, 53, 0.04), 0 8px 24px rgba(15, 19, 53, 0.06);
 }
 
 @theme inline {
@@ -62,41 +66,41 @@
     --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Dark-only brand theme: the app is always dark, so there is no light/dark switch. */
+/* Light Asseco theme (product owner request, 2026-11-27; see docs/design-guidelines.md). */
 :root {
-    --background: #01080f;
-    --foreground: #ffffff;
-    --card: #0f1335;
-    --card-foreground: #ffffff;
-    --popover: #0f1335;
-    --popover-foreground: #ffffff;
-    --primary: #00aee8;
-    --primary-foreground: #01080f;
-    --secondary: rgba(255, 255, 255, 0.1);
-    --secondary-foreground: #ffffff;
-    --muted: rgba(255, 255, 255, 0.05);
-    --muted-foreground: rgba(255, 255, 255, 0.65);
-    --accent: rgba(255, 255, 255, 0.1);
-    --accent-foreground: #ffffff;
-    --destructive: #e5484d;
-    --border: rgba(255, 255, 255, 0.1);
-    --input: rgba(255, 255, 255, 0.15);
+    --background: #f6f7fb;
+    --foreground: #0f1335;
+    --card: #ffffff;
+    --card-foreground: #0f1335;
+    --popover: #ffffff;
+    --popover-foreground: #0f1335;
+    --primary: #252476;
+    --primary-foreground: #ffffff;
+    --secondary: #eef0fb;
+    --secondary-foreground: #252476;
+    --muted: #f1f3f9;
+    --muted-foreground: #5b6178;
+    --accent: #e8f7fd;
+    --accent-foreground: #0f1335;
+    --destructive: #d93f44;
+    --border: #e4e7f0;
+    --input: #d5d9e5;
     --ring: #00aee8;
     --chart-1: #00aee8;
     --chart-2: #a9e8fd;
     --chart-3: #3e3dc4;
     --chart-4: #2eb67d;
     --chart-5: #252476;
-    --radius: 0.25rem;
-    --sidebar: #0f1335;
-    --sidebar-foreground: #ffffff;
-    --sidebar-primary: #00aee8;
-    --sidebar-primary-foreground: #01080f;
-    --sidebar-accent: rgba(255, 255, 255, 0.1);
-    --sidebar-accent-foreground: #ffffff;
-    --sidebar-border: rgba(255, 255, 255, 0.1);
+    --radius: 0.75rem;
+    --sidebar: #ffffff;
+    --sidebar-foreground: #0f1335;
+    --sidebar-primary: #252476;
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: #eef0fb;
+    --sidebar-accent-foreground: #252476;
+    --sidebar-border: #e4e7f0;
     --sidebar-ring: #00aee8;
-    color-scheme: dark;
+    color-scheme: light;
     /* Sticky site header height (site-header.tsx); mobile titles wrap, so it is taller there. */
     --header-h: 6rem;
 }
@@ -113,7 +117,6 @@
     }
   body {
     @apply bg-background text-foreground;
-    background-color: #01080f;
     }
   html {
     @apply font-sans;

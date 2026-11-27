@@ -27,7 +27,7 @@ describe("i18n-pl", () => {
     expect(pl.decision.nextStepsHeading).toBe("### Następne kroki");
   });
   it("common keys", () => {
-    expect(Object.keys(pl.common).sort()).toEqual(["appSubtitle", "appTitle", "internalError", "intro", "logoAlt"]);
+    expect(Object.keys(pl.common).sort()).toEqual(["appSubtitle", "appTitle", "formHeading", "internalError", "intro", "logoAlt"]);
     expect(pl.common.appTitle).toBe("Hardware Service Decision Copilot");
   });
   it("form and caseType labels", () => {
