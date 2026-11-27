@@ -3,6 +3,9 @@
 # (Pro/Max/Team/Enterprise subscription, valid one year). Optional Actions variable
 # CLAUDE_MODEL (alias such as sonnet or opus, or a full model ID; empty = plan default).
 #
+# Diffs over GitHub's 300-file limit (HTTP 406) are rebuilt from the PR files API,
+# skipping lockfiles, recorded captures, PNGs and files without a text patch.
+#
 # Safety: the PR code is never checked out or executed. Claude gets the diff on stdin,
 # runs with no tools (--tools ""), and starts in an empty directory, so repository
 # settings or hooks from the PR cannot run with the token.
@@ -73,14 +76,50 @@ jobs:
           set -euo pipefail
           work="$RUNNER_TEMP/claude-review"
           mkdir -p "$work"
-          gh pr diff "$PR_NUMBER" -R "$GITHUB_REPOSITORY" > "$work/full.diff"
+          : > "$work/skipped.txt"
+          source=gh-pr-diff
+          if ! gh pr diff "$PR_NUMBER" -R "$GITHUB_REPOSITORY" > "$work/full.diff" 2> "$work/gh-diff.err"; then
+            # GitHub refuses diffs over 300 files with HTTP 406 (PullRequest.diff too_large).
+            # Fall back to the files API (up to 3000 files) and rebuild a unified diff from
+            # its per-file patch fields. Nothing from the PR is checked out or executed.
+            grep -qE 'too_large|HTTP 406' "$work/gh-diff.err" || { cat "$work/gh-diff.err" >&2; exit 1; }
+            echo "gh pr diff refused a too-large diff; building it from the files API."
+            source=files-api
+            gh api --paginate "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" \
+              --jq '.[]' > "$work/files.jsonl"
+            # Skipped: lockfiles, recorded captures, PNGs, and files without a patch
+            # (binary or too large for the API). File names are untrusted: one line, max 120 chars.
+            jq -r --slurp '
+              def noise: test("(^|/)(pnpm-lock\\.yaml|package-lock\\.json|yarn\\.lock)$|(^|/)fixtures/captures/|\\.png$"; "i");
+              def safe: gsub("[\\r\\n\\t`]"; "?") | if length > 120 then .[0:117] + "..." else . end;
+              .[] | select((.filename | noise) or (has("patch") | not))
+                  | "\(.filename | safe)\t\(.status)\t" + (if (.filename | noise) then "excluded pattern" else "no patch (binary or too large)" end)
+            ' "$work/files.jsonl" > "$work/skipped.txt"
+            jq -r --slurp '
+              def noise: test("(^|/)(pnpm-lock\\.yaml|package-lock\\.json|yarn\\.lock)$|(^|/)fixtures/captures/|\\.png$"; "i");
+              .[] | select((.filename | noise | not) and has("patch"))
+                  | (.previous_filename // .filename) as $old
+                  | "diff --git a/\($old) b/\(.filename)",
+                    (if .status == "renamed" then "rename from \($old)\nrename to \(.filename)" else empty end),
+                    (if .patch == "" then empty
+                     else (if .status == "added" then "--- /dev/null" else "--- a/\($old)" end),
+                          (if .status == "removed" then "+++ /dev/null" else "+++ b/\(.filename)" end),
+                          .patch
+                     end)
+            ' "$work/files.jsonl" > "$work/full.diff"
+            echo "Files: $(wc -l < "$work/files.jsonl") total, $(wc -l < "$work/skipped.txt") skipped:"
+            cat "$work/skipped.txt"
+          fi
+          [[ -s "$work/full.diff" ]] || { echo "::error::The PR diff is empty after filtering."; exit 1; }
           size=$(wc -c < "$work/full.diff")
           head -c "$MAX_DIFF_BYTES" "$work/full.diff" > "$work/pr.diff"
           truncated=false
           (( size > MAX_DIFF_BYTES )) && truncated=true
-          echo "Diff: $size bytes, truncated=$truncated"
+          echo "Diff: $size bytes from $source, truncated=$truncated"
           echo "truncated=$truncated" >> "$GITHUB_OUTPUT"
           echo "size=$size" >> "$GITHUB_OUTPUT"
+          echo "source=$source" >> "$GITHUB_OUTPUT"
+          echo "skipped=$(wc -l < "$work/skipped.txt")" >> "$GITHUB_OUTPUT"
 
       # Not --bare: bare mode never reads CLAUDE_CODE_OAUTH_TOKEN (API key only).
       - name: Run Claude headless review
@@ -125,6 +164,8 @@ jobs:
           PR_NUMBER: ${{ steps.pr.outputs.number }}
           TRUNCATED: ${{ steps.diff.outputs.truncated }}
           DIFF_SIZE: ${{ steps.diff.outputs.size }}
+          DIFF_SOURCE: ${{ steps.diff.outputs.source }}
+          SKIPPED: ${{ steps.diff.outputs.skipped }}
         run: |
           set -euo pipefail
           marker='<!-- claude-headless-review -->'
@@ -133,16 +174,30 @@ jobs:
             echo "# 🤖 Claude Code headless review"
             echo
             # Model output comes from an untrusted diff: break @mentions (zero-width space after @)
-            # so it cannot notify people, and stay under GitHub's 65536-character comment limit.
-            jq -r '.result | .[0:60000] | gsub("@"; "@​")' review.json
+            # so it cannot notify people. Review (50000) + skipped list (100 lines) stay under GitHub's
+            # 65536-character comment limit.
+            jq -r '.result | .[0:50000] | gsub("@"; "@​")' review.json
             echo
             echo "<details><summary>Run details</summary>"
             echo
             jq -r '"- Model: \(.modelUsage | keys | join(", "))\n- Turns: \(.num_turns)\n- Duration: \((.duration_ms // 0) / 1000 | floor) s"' review.json
             echo "- Claude Code: $CLAUDE_CODE_VERSION"
             [[ "$TRUNCATED" == true ]] && echo "- ⚠️ Diff truncated: reviewed the first $MAX_DIFF_BYTES of $DIFF_SIZE bytes"
+            [[ "$DIFF_SOURCE" == files-api ]] && echo "- Diff over GitHub's 300-file limit: rebuilt from the pull request files API"
             echo
             echo "</details>"
+            if (( SKIPPED > 0 )); then
+              echo
+              echo "<details><summary>⚠️ $SKIPPED file(s) not reviewed</summary>"
+              echo
+              # Names come from the PR: neutralise @mentions like the review text, cap the list.
+              head -n 100 skipped.txt | while IFS=$'\t' read -r name status reason; do
+                printf -- '- `%s` (%s): %s\n' "${name//@/@​}" "$status" "$reason"
+              done
+              (( SKIPPED > 100 )) && echo "- … and $(( SKIPPED - 100 )) more (see the workflow log)"
+              echo
+              echo "</details>"
+            fi
           } > comment.md
           comment_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/issues/$PR_NUMBER/comments" \
             --jq "[.[] | select(.user.login == \"github-actions[bot]\" and (.body | startswith(\"$marker\")))][0].id // empty" | head -n1)
