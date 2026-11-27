@@ -1,0 +1,156 @@
+{
+  "capturedAt": "2026-11-26T10:48:13.529Z",
+  "spike": "S5",
+  "target": "POST https://openrouter.ai/api/v1/chat/completions",
+  "model": "openai/gpt-6-luna",
+  "request": {
+    "model": "openai/gpt-6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a decision assistant for a fictional electronics retailer. Decide a RETURN request strictly under the policy below. Respond in Polish (greeting: 1 sentence; justification: Polish Markdown, 2-6 sentences, no headings; nextSteps: 1-6 Polish items taken from the policy's next-steps rules; citedRules: rule IDs from the policy).\n\n## Return policy\n# Return Policy (example, fictional company)\n\n> Example document created for the Hardware Service Decision Copilot PoC. It describes a fictional electronics retailer. It is not legal advice and does not reproduce any real company's terms.\n\n## R1. Return window\nR1.1. A customer may return a product without giving a reason within **14 calendar days** from the date of purchase.\nR1.2. A return requested on day 15 or later is not accepted under this policy. The customer may still file a complaint if the product is defective (see the Complaint Policy).\n\n## R2. Condition of the returned product\nR2.1. The product must show **no signs of use**: no scratches, dents, scuffs, cracks, stains, fingerprints on glossy surfaces visible in normal light, dust in ports, or worn-off coatings.\nR2.2. The product must be **complete**: device, accessories, cables and manuals delivered with it.\nR2.3. Original packaging is preferred. Missing packaging alone is not a reason to reject the return, but damaged or missing packaging must be mentioned in the decision.\nR2.4. Protective films and factory stickers may be removed, provided the surface underneath is undamaged.\nR2.5. The product must be resellable as new or as \"open box\" without repair or refurbishment.\n\n## R3. Products excluded from returns\nR3.1. In-ear headphones and earbuds whose hygienic seal has been broken.\nR3.2. Products personalised at the customer's request (engraving, custom configuration).\nR3.3. Software or licence codes that have been revealed or activated.\n\n## R4. Decision rules\nR4.1. **Approve** when R1, R2 and R3 are met and the photo confirms the product condition.\nR4.2. **Reject** when the return window (R1) has passed, the product is excluded (R3), or the photo clearly shows signs of use or damage (R2.1).\nR4.3. **Manual review** when the photo is unclear, does not show the product, shows a product other than the declared one, or the evidence is insufficient to confirm R2.\n\n## R5. Next steps after approval\nR5.1. The customer packs the product with all accessories and sends it to the returns department or brings it to a store.\nR5.2. The final decision is made after a physical inspection. If the inspection reveals signs of use not visible in the photo, the return may be rejected.\nR5.3. The refund is issued within 14 days of a positive inspection, using the original payment method.\n\n## R6. Next steps after rejection\nR6.1. The customer keeps the product.\nR6.2. If the customer believes the product is defective, they may file a complaint.\n\n\n## Case facts\n- Product: smartphone \"Galaxy S24\"\n- Case type: return\n- Purchased 3 days ago\n- Date rule: daysSincePurchase=3, withinPeriod=true (R1.1)\n\n## Image findings (from analysis of the customer photo)\n{\"source\":\"llm\",\"photoUsable\":true,\"usabilityIssue\":null,\"categoryMatch\":true,\"damageVisible\":true,\"damageType\":\"screen_crack\",\"damageLocation\":\"Screen, with extensive cracking across the upper area and dark display damage extending downward\",\"likelyCause\":\"mechanical_impact\",\"signsOfUse\":true,\"resellable\":false,\"conditionScore\":4,\"descriptionConsistent\":null,\"screeningDisagreements\":[],\"notes\":\"The phone screen is extensively cracked, particularly across the top. Large dark areas and a vertical colored line are visible on the display. The phone is standing on a white display stand.\"}"
+      },
+      {
+        "role": "user",
+        "content": "Make the decision for this return case."
+      }
+    ],
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "decision_output",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "decision": {
+              "type": "string",
+              "enum": [
+                "approve",
+                "reject",
+                "manual_review"
+              ]
+            },
+            "citedRules": {
+              "minItems": 1,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "greeting": {
+              "type": "string",
+              "minLength": 1
+            },
+            "justification": {
+              "type": "string",
+              "minLength": 1
+            },
+            "nextSteps": {
+              "minItems": 1,
+              "maxItems": 6,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "decision",
+            "citedRules",
+            "greeting",
+            "justification",
+            "nextSteps"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "reasoning": {
+      "effort": "medium"
+    },
+    "provider": {
+      "data_collection": "deny",
+      "require_parameters": true
+    },
+    "usage": {
+      "include": true
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a60851adbb41b600-WAW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:48:11 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-generation-id": "gen-1795690088-a4nFnml4cGxYzleJKdJ2",
+      "x-openrouter-release": "api;6974da3e-2d30-4253-9b9d-763143ceef81"
+    },
+    "body": {
+      "id": "gen-1795690088-a4nFnml4cGxYzleJKdJ2",
+      "object": "chat.completion",
+      "created": 1795690088,
+      "model": "openai/gpt-6-luna",
+      "provider": "Azure",
+      "system_fingerprint": null,
+      "service_tier": "default",
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "stop",
+          "native_finish_reason": "completed",
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"decision\": \"reject\",\n  \"citedRules\": [\"R2.1\", \"R4.2\", \"R6.1\", \"R6.2\"],\n  \"greeting\": \"Dzień dobry, dziękujemy za przesłanie zdjęcia produktu.\",\n  \"justification\": \"Zwrot został zgłoszony w terminie, jednak zdjęcie wyraźnie pokazuje rozległe pęknięcia ekranu i uszkodzenie wyświetlacza. Produkt nosi widoczne ślady uszkodzenia i nie spełnia wymogu braku oznak użycia, dlatego zwrot zostaje odrzucony.\",\n  \"nextSteps\": [\n    \"Klient zatrzymuje produkt.\",\n    \"Jeśli klient uważa, że produkt jest wadliwy, może złożyć reklamację.\"\n  ]\n}",
+            "refusal": null,
+            "reasoning": null,
+            "reasoning_details": [
+              {
+                "type": "reasoning.encrypted",
+                "data": "gAAAAABrCA5rIXkd2ToSYVlG0pgfxLsAnR5X93gKrbjEhwNHCUkiyMU-SoPHRZNEeXjfwFriZuCZw-Zp8Pg6HZVx3kMaYd4lLO61KFt_SB4VXgi0j4YarHX_hDb4_dfZwJ38qsUo-oOcYtzGypFOIzOtJTDJxcsda53RWnzgWbID1tAp7ScwvyI2GRtfxuyV-0gQ3hX6cEiOUJsYfSixHrNphMqwWs4X58jWC9_PCeT3ea3JiaRyr-hYOjdv-BK5g-5IIzxN8hQYTnvPAkNUOvVZ_3s0vh7_fzhqPastkQiVDXzQVcsimV7z2ttvjtWHImH4o4it6f1O5JI61LsC56J1dIMLiYBPsovBWyGgRacjGtVO3i8Yg87qGvsIWLGg5Dm4KDfASCEZ_mUL2p35CwF-3o2nYCsNb4k3CKt-FMfFtbUPL4DVwhHH6TrEAR7ESopMxV0IF_gPXGRAUc3HqwBcYHkE5ZJpnMfViyUoAbN_j0AwAJumok7B4sgO0nn2NL24lva6e0dTJiORqsRos6jdQNzonYI8Riav5947fesXUfwuX2UQ8jaKKgDrZY41g80h1KPijAp0AFJFmWvEm4h0oAdpgJoTBHcBWG6Xz8VZWtPXgtWAuwYoYZlAFPFn8j04pnzQU1OhOyhkptom9_N7u7G44JScGRHVmZSqqai1v1BZN3e3PfjZ-LvAZETYrfpEOS1tejnwJKl8HeXEymKhVEzQflCFQCYH6F_RJXoPwGqlA6lwUCWF1FKZJwPNswmivP6YIUwyO1Z5jE-bQ_ioacmSDYHrcE2yCofvPL_4XiBNMtArhybl96DlbsAVDIYJcqLF6itkfacRAA-G-6tsfsN8rEpt7d3SjmCjWQ-Z8-dV29-i9u8uJQL17l46xGPv35zRYMEGUp6jICUMNJr6hdApT_AeLRcWxl2hgi_SfytMn9FvY8NBZDXVv8MT-DVKKjR7NeU5VbalYc18zKqswcwggkwO2D2uoFjWfSCH9OUcSCV6IJUd6GCWsLBAVuEro_zo-C6RDVEQmvDRxBH3pZGFzAh9H378lM7rqZFcoiItj3hOqFJTZDS-W8dce5cYauGwd-viQMwfNdiIfVaXWB2VsTtKUuGjjwaEcRvsvP7ELCOSp0TKtJ5z7wgyTFaNWEdrcuB513E1qZW27RhJj-9jRuYZbTtQUSGnOdZmfwS756IEyZhiP6Ek6EZFzu24uMFHiEXG7StHYdIuEexrnOmFAOrICmXrmsxb5UbAzxLEwSvH62aH3zACgjsxOPBurvOLz0oiE7JZtZERbWKpLqtoOxLapX9mB5pDDWevNWOiX9-ahAgek8s226GYfQtstdbZTYVzTw_SwVjWHbq8mJnqKAH7oxr7gl9T7bwLLJQ9yjOwpOisx49G8k7ZmiIL0GG5K6VUVujStRdXN3xiVzGX4piVsKgThOzR_kgtdalJ86UMIUIyH4GLME_imTlcxJNolOW6LngipHzj4sU5rBq3t-DqJDmu6Axry8pINin-3H66I2hefZVIgRomcU5A5CVwyhsFtmgwr7v95RBQUZRN23sKCgIuLHz9MCKPAffmc0utaFtG2EvKmuS6LiYXqPdlprHBYYqLXEr25PnihhCsCbkZfKCpb8t6w4bN1c2JVwtm6i7jFRkt3MtiDWF8EtFMyWmkR2lY1pSih6F43RM9gxNvUy6SxBrxlZWbfCLO8ZfEFCQVVn304zNkEN0xg7H6qBOJpZheeLMonTFXc8poBqxSxwvFhf1Ju3-41CNN-fGOhNGHboCelwKgF7NwGFv240otyrRoePEodz0Pnahl5ZKt9GbR_nAQwjd98KcHRRnzYbyn-NLUC2AdfdbO0F0AqfGZzlw62wk1Xx9UM5en8JXgPPJ5XibGuv567ObsNEL4cZz0VVfUw8Tu06BbbsvVHrCnyel-gxMJsU3ewuYsKAY5u3qdpT9ubImDnIjKKvAmtjE0Ro8O2eVdPRWiVSCVKe-E7syvdkHaBD8P_Hzp8mKotkxXacHEF0S89W3temmpDr7ROwIC33jcrO1noiMiidi7NQrYagddsr_YSjJRorQsuS27t3Dif0QU4h36ZmkJo26cBnZHszJADnJamV1B7jAmbVxDVJ_4cUWAryt_2sa-71SXtjm9etEA9ns7y3zlbbbPcFFryNi3-1ZOmjzF9qRY6wISak6FnORNE_BOVrjmfcRjgSEMx2nSCFk1PrXB3lZgQfb5TmInjBPBJJGe5ou1ursTlrshQG9oH66d8eas6kr4MqkVf6EhAskd-rWAGrGMStSuG-G9_lOExQ_Olz9xxJxE0akSUoSZdcOGAjJF0UrummHjDMFCSaQe7x0w_3zLVCtvABmr1pPFjzvAXanqbbamaXflg5uLERrXTSdFNl1I9e-xmEIJEChsK_UtwuT0x1KuyJlNuOVox3x3nzxh-GZkS-mumf_WVx5AZiIpnUVlTDDi3v6Jnn3V18DdGRMYOpyINwv-Y1SosInRgUF-uTFihg2GKlakO4iFn01F-o1UafBx3STUJDU1GdGjavK1whPgWRn3La46zAm18Ja8ZkszOuntX2hzd8jjW-9Hhw==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC02LWx1bmEtMjAyNjA5MjJ8YXp1cmUifQ",
+                "format": "azure-openai-responses-v1",
+                "id": "rs_01b60382ce4290dd016b080e69584c81939ccbcc50b6aa231b",
+                "index": 0
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 950,
+        "completion_tokens": 300,
+        "total_tokens": 1250,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.000245,
+          "upstream_inference_prompt_cost": 0.000095,
+          "upstream_inference_completions_cost": 0.00015
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 105,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "notes": "non-streaming decision, json_schema from z.toJSONSchema(decisionOutputSchema), reasoning medium; findings come from s2-image-findings capture (total 5184 ms)"
+}

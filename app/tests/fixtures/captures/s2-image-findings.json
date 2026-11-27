@@ -1,0 +1,243 @@
+{
+  "capturedAt": "2026-11-26T10:47:17.787Z",
+  "spike": "S2",
+  "target": "POST https://openrouter.ai/api/v1/chat/completions",
+  "model": "openai/gpt-6-luna",
+  "request": {
+    "model": "openai/gpt-6-luna",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You analyse a customer photo for a product RETURN. Declared category: smartphone (Galaxy S24). Fill every field. source must be \"llm\". notes: 2-5 English sentences describing only what is visible. damageLocation is free text or null. resellable is true/false for a return. descriptionConsistent is null for a return. screeningDisagreements is an empty array. conditionScore 0 = like new .. 4 = heavily worn."
+      },
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Analyse the attached photo."
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQOD…[truncated]"
+            }
+          }
+        ]
+      }
+    ],
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "image_findings",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "properties": {
+            "source": {
+              "type": "string",
+              "enum": [
+                "screening",
+                "llm"
+              ]
+            },
+            "photoUsable": {
+              "type": "boolean"
+            },
+            "usabilityIssue": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "blurry",
+                    "too_dark",
+                    "not_electronics",
+                    "product_not_visible"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "categoryMatch": {
+              "type": "boolean"
+            },
+            "damageVisible": {
+              "type": "boolean"
+            },
+            "damageType": {
+              "type": "string",
+              "enum": [
+                "screen_crack",
+                "housing_crack_or_dent",
+                "scratches",
+                "liquid_marks",
+                "burn_or_melt",
+                "battery_swelling",
+                "broken_part",
+                "none_visible",
+                "other"
+              ]
+            },
+            "damageLocation": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "likelyCause": {
+              "type": "string",
+              "enum": [
+                "manufacturing_defect",
+                "mechanical_impact",
+                "liquid",
+                "normal_wear",
+                "no_visible_damage",
+                "undetermined"
+              ]
+            },
+            "signsOfUse": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "resellable": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "conditionScore": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 4
+            },
+            "descriptionConsistent": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "screeningDisagreements": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "notes": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "photoUsable",
+            "usabilityIssue",
+            "categoryMatch",
+            "damageVisible",
+            "damageType",
+            "damageLocation",
+            "likelyCause",
+            "signsOfUse",
+            "resellable",
+            "conditionScore",
+            "descriptionConsistent",
+            "screeningDisagreements",
+            "notes"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "provider": {
+      "data_collection": "deny",
+      "require_parameters": true
+    },
+    "usage": {
+      "include": true
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a608504d88a01607-WAW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:47:15 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-generation-id": "gen-1795690032-N1dySBxnhSyfb5XOQyun",
+      "x-openrouter-release": "api;6974da3e-2d30-4253-9b9d-763143ceef81"
+    },
+    "body": {
+      "id": "gen-1795690032-N1dySBxnhSyfb5XOQyun",
+      "object": "chat.completion",
+      "created": 1795690032,
+      "model": "openai/gpt-6-luna",
+      "provider": "Azure",
+      "system_fingerprint": null,
+      "service_tier": "default",
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "stop",
+          "native_finish_reason": "completed",
+          "message": {
+            "role": "assistant",
+            "content": "{\n  \"source\": \"llm\",\n  \"photoUsable\": true,\n  \"usabilityIssue\": null,\n  \"categoryMatch\": true,\n  \"damageVisible\": true,\n  \"damageType\": \"screen_crack\",\n  \"damageLocation\": \"Screen, with extensive cracking across the upper area and dark display damage extending downward\",\n  \"likelyCause\": \"mechanical_impact\",\n  \"signsOfUse\": true,\n  \"resellable\": false,\n  \"conditionScore\": 4,\n  \"descriptionConsistent\": null,\n  \"screeningDisagreements\": [],\n  \"notes\": \"The phone screen is extensively cracked, particularly across the top. Large dark areas and a vertical colored line are visible on the display. The phone is standing on a white display stand.\"\n}",
+            "refusal": null,
+            "reasoning": "**Creating JSON for damaged smartphone**\n\nI need to produce JSON based on the schema. I’m picturing a phone with a shattered screen and black ink bleeding. It’s categorized as a smartphone, probably an iPhone rather than a Galaxy S24. The category match suggests it’s indeed a smartphone. The screen has a crack, likely from mechanical impact. The use signs are true, but it's not resellable, giving it a score of 4 since it’s heavily worn. The photo is usable, with notes visible, and I’ll ensure the JSON is precise.",
+            "reasoning_details": [
+              {
+                "type": "reasoning.summary",
+                "summary": "**Creating JSON for damaged smartphone**\n\nI need to produce JSON based on the schema. I’m picturing a phone with a shattered screen and black ink bleeding. It’s categorized as a smartphone, probably an iPhone rather than a Galaxy S24. The category match suggests it’s indeed a smartphone. The screen has a crack, likely from mechanical impact. The use signs are true, but it's not resellable, giving it a score of 4 since it’s heavily worn. The photo is usable, with notes visible, and I’ll ensure the JSON is precise.",
+                "format": "azure-openai-responses-v1",
+                "index": 0
+              },
+              {
+                "type": "reasoning.encrypted",
+                "data": "gAAAAABrCA40WXfMdeRNRjq6tYHqnoRA6dnwOCqvahTnM84o8nqvU0vu-mp8ldovV_5VqDJY1Ad3IDPIMDIbE6wDMZ_FATRpxRkDK1PIgv44FSy4PVvlKZgrGsKVFIAapGU1_8bu-GDihN7KH3GsT2rKeEhmnxcrqeb0vo6ISpMZVQR5OCuvfBHIJ0MaLV97R_KLtzMLS8_91ghdiySH5qdi3KvksZV9H4ctcLs7pz6xEFGtBL_MhR7F2lM6uOqwtxlPeQJPsUd0MB1uNn72fN-CKjNW70vC8aEsvcbswU_xbbftXp8txlA6k6gPCDs61RTXo-Fn9bnq0gm8NdDU444nMGsSunDRxQt7daQ3VIr848pviCYUXw7QjqTpaGxZ8GGcUydmyIlJ5r9dKY9eweuqg15TplQbes8su_kiAsH2cN2jhD4LakMob4zmR27dd0rq_SGWBen-8ZXdkUGatSAIk2W1HmyDcR63sVv7r1yg41VUsaayrhOIFs_c22M5zG5EDEDUQVSuyywyKX7pK7ZQbHFGb0lfLHna9AR7Kc_YH_6unON1QM5w1s_S6hsQHKH3EPmFYnS6CT8Za1Z3QqYaRLCK1ON1x_hIiAid1EusetJCvf0VgRXPSUmUHa3kvzdopkld9RHW5bPQfZmiw6ADSjMfHsVjyCSvwNyfwfp9GsO7e2r5JZaHK_NTV6cPuPRzSa-ClMISG3H32aGuwGLXUmr7DDl652slVln-qwBTRUfdIh2SqRxLS3EDjSc6mTW0gdyMBdFJh6Ux6a0HEfDvK25b2utgj0eZqhc-JJ7gERc4Kf6Fo7Ev63CtIcGxhvBng95QE3In3XiIUF4afcqYa5upNpDQ46rZoYxfp1mx5wzEqvSoZOqnKnJ6aFYRricpATXU2tn8kDXUQ8DIoH7_xpj1r5TcPBCfhg3ROLIsk7LjMduowFYqNnea-aihtAY5y62T3-rAUjIKgkwnBXD35PmDNBUbPFfHcd5AhIJHCBpD7Hd1S2_p6f7AQYUtihovpKkNxhti-bo9653uOfc9tePHSw7zV3fWpQBpJDrqe6asaoLNQaZ9WJpOf1Ke4UCXPbaOmXqfk_0sYgtfMom9RZOEXwq-a-EMUdyqpAHDENybUiIV98f1_xzi9g6vTmX6neKcOr7RiJYrUBaIu5QGGx-vLXc-q5h1A38uHkz0rGolPF_j0_jYMwDEWvBA9FEIHgdhGoLQc2dpcomKgzuJ87a21HiLD4xQAExp8LyAylOKZTfxbhUJli5gGBbatDhoZ3Mv5bFIs9obX1QBzvCsMBQ6OPeQU9KvlwF8gvk-CsQlD5KgDRN7Lbhs5sFS4LyyVh1bzXbod6_65uWkS-0YVzPF7ADfoFoPp5j8mc-99Gy_ZMFDHbT9Mp2_JbyrgWj0z-nEP3PTcz1UYZ9AKmZi1Qu8Yc5v-1cyj96CgJT46ZRtqGD-b6Wed2oNQ9YQ5xkx4Vbx9WFdO5DjQB_pGu2AKmQrM1S9LynaxdnaW9u2t1awZEaubv4IqWFbtqPr47uO1cEsLb3EjOAunjgzwgr4qzoi9VrjuD0fGY94cKpFx69wNUNTR_B-xVANDTXDzWJRbK4E-FdgINetrF6Z3PWB2gkkf92NUxXbbWU1nH9uSvN7kCd0CXnK4fd3cZTS3VCAUfVl1Pddznh5V67R93r3bStai8UNhbMPoPowZ8KdIRhCGpWltDS-Yufpim_UWtfoh14JQXeiXrG_KTzuzMDkr2n4Qn3AAVlL9MELE8QLzGRP5WTR6DEP5ExKU89sOJZznYAbG6J590doG3c0He5L6urD1UeLQfTfhKvjuivVXPVH1s42SoCOY_Rhi1QJ_DYFthkqJjs3c8wZby9sXyQirh7i7bhhHm9J94URdQB2MVVPJ67xQ-YVYB5iH5eDERgrXhnk8kKVju2W_F3Ve6rEwc4vOf91BVOXgV2mBy5vg1h_KXFnxSfKXYanVGHXoKy64zrKuhguHXKR8tSx0naFlB7l79oJYwOnKH4hnH8MhtDN3UcL-RB1rUZ7vho2F5o-kFOv7N0QTPqd6aDpO5JY7ZE31ENsIytyQv3FM4aFM6KwuwY-F3qomM66RUOcAQCt7fFzrljiO6jQp_JRGcJopscChtTkUFQicDCXhUnxv1ImGwTLlWqxM8hiDNmZYDGJi3CbCtjaztpQfXTlQmw_5_1agh4fybF-ntw_AIJhHDCBsmWJceoNOIIAAD-E2fqc2f2JPI5pjwLuuMxj8WPpfpPfVb1hp3vaHf2ZgRvA_FRy0XdSYYRFTsmJqNZAWXp1BPsrv5_rkl19aPeraF_zTQ0oh17DUIKhBjSKdi_701hM0-IhkZnO73834S4m0nVLncZAlj6aV1LpZ7b_m55bUvNkIidxB6bIFaVCW4y76R2-bCEqdVyzK8PuqUmpVim5SsVqlx0DfKIEsEr3Km96X7QeDbBuLy78DS3a7d5g8YPRsRABR556adpNPB6FsS7ESMv5_8uNFqG4ZMsnmreXv-Daf011NB5b_h7hlNwroYXHTvb5UXC_Xq63EpbcBSTc2Scw5InAx5Zf1DvogEPZsPUyJP11PYRQmq94YCzj4xEdTRkh3D74EMc8bwKRSon_ci7-nUuFveN8ETVnClKw9zBVeAR5nHIxlg7F3OQsxsAiQMMtXIzBjeNfxOAATm8UD4kMOrt7Nvb2VKwHZZn-kv6M77iXVX89_tEImwhaDX5fgJZW6ONc81lU24alXPCiIBKQLlCCD3qL0NMj-HxokTsmbUQYNA==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC02LWx1bmEtMjAyNjA5MjJ8YXp1cmUifQ",
+                "format": "azure-openai-responses-v1",
+                "id": "rs_08715b24b95ec911016b080e324f9c8197b10663d95ab05e06",
+                "index": 1
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1681,
+        "completion_tokens": 287,
+        "total_tokens": 1968,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 1678,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00035355,
+          "upstream_inference_prompt_cost": 0.00021005,
+          "upstream_inference_completions_cost": 0.0001435
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 110,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "notes": "json_schema strict from z.toJSONSchema(imageFindingsSchema); provider={\"data_collection\":\"deny\",\"require_parameters\":true} (latency 5552 ms)"
+}

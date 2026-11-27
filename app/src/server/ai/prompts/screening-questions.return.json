@@ -1,0 +1,32 @@
+{
+  "version": "2026-11-26.1",
+  "questions": {
+    "photo_usable": {
+      "type": "noul",
+      "instructions": "The photo is sharp and lit well enough, and shows the product fully enough, to judge its condition."
+    },
+    "category_match": {
+      "type": "noul",
+      "instructions": "The product in the photo is {category}."
+    },
+    "damage_visible": {
+      "type": "noul",
+      "instructions": "Physical damage is visible (crack, dent, broken part, burn, swelling)."
+    },
+    "signs_of_use": {
+      "type": "noul",
+      "instructions": "Signs of use are visible (scratches, scuffs, dirt, dust in ports, worn coating, fingerprints on glossy surfaces)."
+    },
+    "condition": {
+      "type": "score",
+      "instructions": "Overall condition of the product.",
+      "criteria": [
+        "new / sealed",
+        "like new",
+        "light wear",
+        "heavy wear",
+        "damaged"
+      ]
+    }
+  }
+}

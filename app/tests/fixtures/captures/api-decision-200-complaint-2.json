@@ -1,0 +1,67 @@
+{
+  "capturedAt": "2026-11-26T11:35:25.257Z",
+  "target": "POST http://localhost:3010/api/cases/<caseId>/decision",
+  "request": {
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "status": "decided",
+      "decision": "manual_review",
+      "decisionLabel": "Do weryfikacji przez pracownika",
+      "citedRules": [
+        "C4.3",
+        "C1.1"
+      ],
+      "firstMessage": {
+        "id": "50fe2a4d-5f42-4733-9094-0f6e0b241135",
+        "role": "assistant",
+        "metadata": {
+          "decision": "manual_review",
+          "origin": "initial",
+          "citedRules": [
+            "C4.3",
+            "C1.1"
+          ]
+        },
+        "parts": [
+          {
+            "type": "text",
+            "text": "Cześć, dziękujemy za zgłoszenie dotyczące zawiasu w Twoim laptopie."
+          },
+          {
+            "type": "data-decision",
+            "data": {
+              "decision": "manual_review",
+              "label": "Do weryfikacji przez pracownika",
+              "origin": "initial"
+            }
+          },
+          {
+            "type": "text",
+            "text": "### Uzasadnienie\n\nZgłoszenie mieści się w 24-miesięcznym okresie składania reklamacji (C1.1). Zdjęcie nie pozwala potwierdzić zgłoszonej usterki zawiasu, a widoczny produkt nie pasuje do podanej nazwy ThinkPad X1. Dlatego opis i zdjęcie wymagają wyjaśnienia przed oceną zgłoszenia (C4.3).\n\nZastosowane zasady: C4.3, C1.1"
+          },
+          {
+            "type": "text",
+            "text": "### Następne kroki\n\n1. Pracownik serwisu oceni zgłoszenie.\n2. Możesz dopisać w czacie, kiedy i w jaki sposób pojawił się problem."
+          },
+          {
+            "type": "text",
+            "text": "_To jest wstępna decyzja. Ostateczna decyzja zostanie podjęta po oględzinach produktu przez nasz serwis._"
+          }
+        ]
+      }
+    }
+  },
+  "notes": "Complaint case attempt 2, decision step."
+}

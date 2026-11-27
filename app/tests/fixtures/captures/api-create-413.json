@@ -1,0 +1,43 @@
+{
+  "capturedAt": "2026-11-26T11:34:21.530Z",
+  "target": "POST http://localhost:3010/api/cases",
+  "request": {
+    "headers": {
+      "content-type": "multipart/form-data; boundary=<generated>"
+    },
+    "body": {
+      "multipartFields": {
+        "caseType": "return",
+        "category": "smartphone",
+        "productName": "Galaxy S24",
+        "purchaseDate": "2026-11-23",
+        "photo": {
+          "fileName": "big.jpg",
+          "size": 12582912,
+          "contentType": "image/jpeg"
+        }
+      }
+    }
+  },
+  "response": {
+    "status": 413,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "error": {
+        "code": "PAYLOAD_TOO_LARGE",
+        "message": "Plik przekracza limit 10 MB",
+        "fields": {
+          "photo": "Plik przekracza limit 10 MB"
+        }
+      }
+    }
+  },
+  "notes": "Synthetic 12 MB body with a JPEG header (over the 11 MB request limit, A17)."
+}

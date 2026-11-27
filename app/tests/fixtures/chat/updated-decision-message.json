@@ -1,0 +1,35 @@
+{
+  "id": "f73aa682-612a-4764-a96a-3efe6660066b",
+  "metadata": {
+    "decision": "approve",
+    "origin": "chat_update",
+    "citedRules": [
+      "C2.1",
+      "C2.2",
+      "C4.3"
+    ]
+  },
+  "role": "assistant",
+  "parts": [
+    {
+      "type": "step-start"
+    },
+    {
+      "type": "data-decision",
+      "data": {
+        "decision": "approve",
+        "label": "Zaakceptowano",
+        "origin": "chat_update",
+        "reason": "Klient podaje, że zawias pękł podczas zwykłego otwierania i wcześniej skrzypiał, co może wskazywać na wadę ujawnioną przy normalnym użytkowaniu. Jednak zdjęcie pokazuje uszkodzenie mechaniczne zawiasu, a jego przyczyny nie da się potwierdzić na podstawie dostępnych danych; wymaga oceny serwisu."
+      }
+    },
+    {
+      "type": "step-start"
+    },
+    {
+      "type": "text",
+      "text": "Dziękuję za wyjaśnienie. Zgłoszenie pozostaje w ręcznej weryfikacji: opis może wskazywać na wadę zawiasu, ale przyczyna uszkodzenia wymaga oceny serwisu (C2.2, C4.3). Prosimy przekazać laptop do serwisu z krótkim opisem problemu.",
+      "state": "done"
+    }
+  ]
+}

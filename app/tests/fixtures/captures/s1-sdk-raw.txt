@@ -1,0 +1,5 @@
+typeof or.decisionModel = undefined
+typeof or.evaluationModel = function
+evaluate OK in 1156 ms
+answers: {"photo_usable":{"type":"boolean","probability":0.13},"condition":{"type":"score","score":4,"probabilities":{"0":0,"1":0,"2":0,"3":0,"4":1}}}
+providerMetadata.openrouter: {"provider":"Azure","answers":{"photo_usable":{},"condition":{"confidence":1,"legend":{"0":"new","1":"like new","2":"light wear","3":"heavy wear","4":"damaged"}}},"usage":{"cost":0}}

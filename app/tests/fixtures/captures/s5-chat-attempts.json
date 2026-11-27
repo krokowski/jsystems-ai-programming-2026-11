@@ -1,0 +1,13 @@
+{
+  "toolCalledAtAttempt": 1,
+  "attempts": [
+    {
+      "n": 1,
+      "firm": false,
+      "toolCalled": true,
+      "reasoning": "reasoning=0 reasoning_details=0",
+      "finish": "tool_calls",
+      "status": 200
+    }
+  ]
+}

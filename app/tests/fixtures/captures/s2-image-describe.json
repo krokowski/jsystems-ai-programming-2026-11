@@ -1,0 +1,109 @@
+{
+  "capturedAt": "2026-11-26T10:47:12.212Z",
+  "spike": "S2",
+  "target": "POST https://openrouter.ai/api/v1/chat/completions",
+  "model": "openai/gpt-6-luna",
+  "request": {
+    "model": "openai/gpt-6-luna",
+    "messages": [
+      {
+        "role": "user",
+        "content": [
+          {
+            "type": "text",
+            "text": "Describe only what is visible on the product in 2 sentences."
+          },
+          {
+            "type": "image_url",
+            "image_url": {
+              "url": "data:image/jpeg;base64,/9j/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQOD…[truncated]"
+            }
+          }
+        ]
+      }
+    ],
+    "provider": {
+      "data_collection": "deny",
+      "require_parameters": true
+    },
+    "usage": {
+      "include": true
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "access-control-allow-origin": "*",
+      "access-control-expose-headers": "WWW-Authenticate,PAYMENT-REQUIRED,Payment-Receipt,PAYMENT-RESPONSE,Location,X-Generation-Id,x-openrouter-error-origin,x-openrouter-error-tool,X-Provider-Name,request-id,x-openrouter-subscription-passthrough,anthropic-ratelimit-unified-status,Retry-After,cf-ray",
+      "alt-svc": "h3=\":443\"; ma=86400",
+      "cf-ray": "a6085036bc581607-WAW",
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "date": "Thu, 26 Nov 2026 10:47:11 GMT",
+      "permissions-policy": "payment=(self \"https://checkout.stripe.com\" \"https://connect-js.stripe.com\" \"https://js.stripe.com\" \"https://*.js.stripe.com\" \"https://hooks.stripe.com\")",
+      "referrer-policy": "no-referrer, strict-origin-when-cross-origin",
+      "server": "cloudflare",
+      "transfer-encoding": "chunked",
+      "x-content-type-options": "nosniff",
+      "x-generation-id": "gen-1795690028-zsl0Rvk8n5p9iiFST0nf",
+      "x-openrouter-release": "api;6974da3e-2d30-4253-9b9d-763143ceef81"
+    },
+    "body": {
+      "id": "gen-1795690028-zsl0Rvk8n5p9iiFST0nf",
+      "object": "chat.completion",
+      "created": 1795690028,
+      "model": "openai/gpt-6-luna",
+      "provider": "Azure",
+      "system_fingerprint": null,
+      "service_tier": "default",
+      "choices": [
+        {
+          "index": 0,
+          "logprobs": null,
+          "finish_reason": "stop",
+          "native_finish_reason": "completed",
+          "message": {
+            "role": "assistant",
+            "content": "A black smartphone has a heavily cracked screen with large dark areas obscuring parts of the display. The visible screen shows a settings page with device information and is propped upright on a white stand.",
+            "refusal": null,
+            "reasoning": null,
+            "reasoning_details": [
+              {
+                "type": "reasoning.encrypted",
+                "data": "gAAAAABrCA4vYocXNPh7MGqFI0uBGjE2ui8GNwaLcUeNVV-b-VrW977_jgMaNRsOrngdC2ui0pdmmzYpCqb1a-cjyuioOzcj4dpaNXSbGz04Aa3WpUND9hDrgAueMMjGCFAKCOOUgoCjSUoiyujvxucWSIgUD2qaqUYLCmUPseKcOhwsSBAHb0VYoM4iR0PRSAWVlD0vfTRhj1-xc0UxkRKlYH1hlJ2H2Z8KW-JYxz7Yuk8a02FBO4bWvjw2qz_bKCOrh0DtFPz2a_LBbRGfIZkebj9p40_beoXZTEzA9fT1YWDBXpHd3mHAN8Ch54FZuPoN4m7CKO9YP8llVpvKz5h1ewoFOJUucqEMCHuGAHLN4jjlK7KDhu13ZhOv2-vZ1iBqSJ2r6XV_rx1_16n_9GzgrHUlkvasT4TK7UvpHrblr1cmrDKMOqa2VoxA6PA7WLLbNxvudx6-6P8VzEJ8JwrOsXZn12tSjobT_VZYLUvKDVoa7QTTePGxMab_qAgAMvBdiK53QSwTCpR856-CtAj4S8uUUo10PwjPj2GJLtPNVtC_ksVkIF-2upurtgzhFP9XPJYXyVBzNOk9nH6A589hMK4RpsL1cT8bBnP_h5R2B-et6hqyjQ1peI-ldqpZMuvEnrVK3hQ02EI1fXwylqwji75F9v3WN30I7B3tnObtmbY8l8qmLoKfC4NciVpUvyzz2_2rmC_QdpHIsbqAJwjViWnwzOUG7B9eTyT7MkjjcVqGzI_p7NiLNZz20PNE_OORTiGVM6TOWaanEkWRPRFcPes7JHmfkw5J51uOPXplZ2r3uI24-Th65-pNyFLSIZ61VzYOrTUS3E-BVcHnQbvaHjkpdnrn-lngE5VoLQsxv64dsVulmer0CVS-xgYhG2vm6AefNqJNbnBr2a4U8gRQvdj0C_4mEZzFo7RDzmcz0StKYGQVlP9d-WDbLz3peVX4dMj936T20swssMjETdLoob7Edji3xODXcvj541skr1LNzBuaSxw88tVpRxKHjHcxOIpmIbazBKMkI3sL4jYvQPFumvI1TF1oToGH4vHBPEhiI_efndhtwIB6HEVvoSzWtu_2F8pyw616AwKi14GXDmgfOGmuXKX0RTCaVuIJjuxA3uyNM_2osaod2Kf8vmugdc2rs3ZzrB8jNAcNn3rokQjFiQH2U1Z3Th5Vgio8NHENRG1n9zJeh2FyFbesn-yf6YGDfSiYBdLxFYRMqpf_UGbWjPW5IBPF5w0FhoqLb1l_0mIDxHAMucDsnBElT5IsiyWrmnqEOecSE2QzLDQmgEV8vC9HN9qGC5bxbacZag6EmHT3cM9dHkkwqvvnOdeSgX4uCY3BHvfiLE9GLL1hdbdq7BPqHqBi9XHeP3znPWjkbEt5wwUpITVuD0u561wpJ_E_kUJKlSfyiOABSVd61FMCP5Mvw2OGIlSBIGOzgigS7xE8I84BMkZrNivF62BAmMWHpgCl7ZN0q6jyyM6HP55L78ToAdh3BkpJFHHwrP_TlM9kvKi6MZS32vZ4UULQ9xA3tyn40iW4W0XFtcZkM47ExPi8sL8NvcSEF3SjRz8xmMHMwZJaRp5fvfpUNiyaM2XFd8u5KTI2-j4PMeThOYg-Hd5UkyLCig8AqmKDFj1ZuMM92A_8lfd8DkjYCdWOfQNKTbHpxeMsQtjaZVhcifmAAMq6Q4zRGgkxlhl1CZiB5kHLJC7lkN93ZqDN-pWzDl01daqHq-jhM6tX8OgxgzKh3F2LaN27hS1hQ8K32B_TWbh22VxmbOiI-DJ0iUAzs6OLP52_FVnQGwiLIL2v7Y4PO95RRvHvG7UWyz2_LMgTIaX8ixTUfh5QHzZzeiQFy_MYl8Bu9rTixvM-5hQoPErFYHMbvQ==.eyJlbmRwb2ludF9zbHVnIjoib3BlbmFpL2dwdC02LWx1bmEtMjAyNjA5MjJ8YXp1cmUifQ",
+                "format": "azure-openai-responses-v1",
+                "id": "rs_0f128d6b211e5628016b080e2ed04c8190a44075d6e8679598",
+                "index": 0
+              }
+            ]
+          }
+        }
+      ],
+      "usage": {
+        "prompt_tokens": 1342,
+        "completion_tokens": 85,
+        "total_tokens": 1427,
+        "cost": 0,
+        "is_byok": true,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 1339,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.000210175,
+          "upstream_inference_prompt_cost": 0.000167675,
+          "upstream_inference_completions_cost": 0.0000425
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 40,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      }
+    }
+  },
+  "notes": "image_url part with data_collection=deny, require_parameters=true (latency 3894 ms)"
+}

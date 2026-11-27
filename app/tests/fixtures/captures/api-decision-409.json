@@ -1,0 +1,26 @@
+{
+  "capturedAt": "2026-11-26T11:34:21.856Z",
+  "target": "POST http://localhost:3010/api/cases/<caseId>/decision",
+  "request": {
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 409,
+    "headers": {
+      "connection": "keep-alive",
+      "content-encoding": "gzip",
+      "content-type": "application/json",
+      "keep-alive": "timeout=5",
+      "transfer-encoding": "chunked",
+      "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding"
+    },
+    "body": {
+      "error": {
+        "code": "CASE_STATE",
+        "message": "Nie udało się przetworzyć zgłoszenia. Spróbuj ponownie."
+      }
+    }
+  },
+  "notes": "Decision requested on a fresh case before /analysis."
+}
